@@ -13,6 +13,7 @@ struct WordReelView: View {
     @ObservedObject var wordReel: WordReel
     
     @State private var lastDragValue: CGFloat = 0
+    @State private var selectedWordCard: WordCard?
     
     init(wordStrings: [String]) {
         self.wordReel = WordReel(wordStrings: wordStrings)
@@ -21,16 +22,28 @@ struct WordReelView: View {
     var body: some View {
         RealityView { content in
             content.add(wordReel.reelEntity)
+        } update: { content in
+            print("adding selectedWordCard with word \(selectedWordCard?.word)")
+            if let selectedWordCard = selectedWordCard {
+                content.add(selectedWordCard.modelEntity)
+            }
         }
         .gesture(DragGesture()
             .onChanged { value in
                 let dragDelta = value.translation.height - lastDragValue
                 lastDragValue = value.translation.height
                 spinReel(by: dragDelta)
+                // TODO highlight
             }
             .onEnded { _ in
                 lastDragValue = 0
                 wordReel.updateVisibleCards()
+            }
+        )
+        .gesture(TapGesture()
+            .onEnded { _ in
+                print("long press on ended")
+                selectedWordCard = wordReel.selectMiddleCard()
             }
         )
     }

@@ -9,6 +9,25 @@ import SwiftUI
 import RealityKit
 import RealityKitContent
 
+struct WordCard {
+    let id: UUID
+    let modelEntity: ModelEntity
+    let word: String
+    var draggable: Bool
+    
+    init(with wordString: String, draggable: Bool = false) {
+        self.id = UUID()
+        self.word = wordString
+        self.draggable = draggable
+        guard let entity = createWordCardEntity(word: wordString) else {
+            print("Couldn't generate wordCardentity!")
+            self.modelEntity = ModelEntity()
+            return
+        }
+        self.modelEntity = entity
+    }
+}
+
 func generateTextMesh(drawText text: String) -> MeshResource {
     return .generateText(text,
                          extrusionDepth: 0.01,

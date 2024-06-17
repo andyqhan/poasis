@@ -7,33 +7,22 @@
 import SwiftUI
 import RealityKit
 
-struct WordCard {
-    let id: UUID
-    let modelEntity: ModelEntity
-    let word: String
-    
-    init(with wordString: String) {
-        self.id = UUID()
-        self.word = wordString
-        guard let entity = createWordCardEntity(word: wordString) else {
-            print("Couldn't generate wordCardentity!")
-            self.modelEntity = ModelEntity()
-            return
-        }
-        self.modelEntity = entity
-    }
-}
+
 
 class WordReel: ObservableObject {
     @Published var wordCards: [WordCard] = []
     var reelEntity: Entity = Entity()
     var currentRotation: Float = 0.0  // Keeps track of the Reel's rotation
     var cardRotationDict: [UUID: Angle] = [:]
+    var replaceWords: Bool
     
     let anglePerCard = Angle(radians: .pi / Double(6))  // 30 degrees
     
-    init(wordStrings: [String]) {
+    // replaceWords controls whether a wordcard should be replaced when it's selected
+    init(wordStrings: [String], replaceWords: Bool = true) {
         //super.init()
+        self.replaceWords = replaceWords
+        
         for wordString in wordStrings {
             let wordCard = WordCard(with: wordString)
             addCard(wordCard)
@@ -51,6 +40,7 @@ class WordReel: ObservableObject {
 
     func removeCard(_ wordCard: WordCard) {
         if let index = wordCards.firstIndex(where: { $0.id == wordCard.id }) {
+            print("Removing card \(wordCard.word)")
             wordCards.remove(at: index)
             wordCard.modelEntity.removeFromParent()
         }
@@ -92,6 +82,43 @@ class WordReel: ObservableObject {
         } else {
             return cardRotation >= lowerBound || cardRotation <= upperBound
         }
+    }
+    
+    // This function is called when the "select" action (currently long-press) is detected on the wordReel.
+    // It should give the user a card that they can put on a Board.
+    func selectMiddleCard() -> WordCard? {
+        // Calculate middle card
+        guard let middleCard = getMiddleCard() else {
+            return nil
+        }
+
+        // Remove the middle card if replaceWords is false
+        if !replaceWords {
+            removeCard(middleCard)
+        }
+
+        // Return a copy of the middle card
+        return WordCard(with: middleCard.word)
+    }
+    
+    // Return the middle card entity.
+    private func getMiddleCard() -> WordCard? {
+        let middleRotation = currentRotation
+        var closestCard: WordCard? = nil
+        var closestDistance: Float = .infinity
+
+        for card in wordCards {
+            guard let cardRotationD = cardRotationDict[card.id]?.radians else {
+                continue
+            }
+            let cardRotation = Float(cardRotationD)
+            let distance = abs(cardRotation - middleRotation)
+            if distance < closestDistance {
+                closestDistance = distance
+                closestCard = card
+            }
+        }
+        return closestCard
     }
     
     private func positionCards() {
