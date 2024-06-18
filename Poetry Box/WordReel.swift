@@ -6,7 +6,7 @@
 //
 import SwiftUI
 import RealityKit
-
+import RealityKitContent
 
 
 class WordReel: ObservableObject {
@@ -24,9 +24,17 @@ class WordReel: ObservableObject {
         self.replaceWords = replaceWords
         
         for wordString in wordStrings {
-            let wordCard = WordCard(with: wordString)
+            let wordCard = WordCard(with: wordString, draggable: false)
             addCard(wordCard)
         }
+        // TODO make reel able to be dragged around — maybe need a PlinthEntity or something
+//        reelEntity.components.set(InputTargetComponent())
+//        reelEntity.components.set(CollisionComponent(shapes: <#T##[ShapeResource]#>))
+        var gestureComponent = GestureComponent()
+        gestureComponent.canDrag = true
+        gestureComponent.canRotate = false
+        gestureComponent.canScale = false
+        reelEntity.components.set(gestureComponent)
         
         positionCards()
 
@@ -98,7 +106,7 @@ class WordReel: ObservableObject {
         }
 
         // Return a copy of the middle card
-        return WordCard(with: middleCard.word)
+        return WordCard(with: middleCard.word, draggable: true)
     }
     
     // Return the middle card entity.

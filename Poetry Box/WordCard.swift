@@ -19,7 +19,7 @@ struct WordCard {
         self.id = UUID()
         self.word = wordString
         self.draggable = draggable
-        guard let entity = createWordCardEntity(word: wordString) else {
+        guard let entity = createWordCardEntity(word: wordString, draggable: draggable) else {
             print("Couldn't generate wordCardentity!")
             self.modelEntity = ModelEntity()
             return
@@ -36,7 +36,7 @@ func generateTextMesh(drawText text: String) -> MeshResource {
     )
 }
 
-func createWordCardEntity(word: String) -> ModelEntity? {
+func createWordCardEntity(word: String, draggable: Bool) -> ModelEntity? {
     // Create a shallow box with the width based on the text size
     let textMesh = generateTextMesh(drawText: word)
     let textBounds = textMesh.bounds
@@ -63,7 +63,7 @@ func createWordCardEntity(word: String) -> ModelEntity? {
     boxEntity.components.set(CollisionComponent(shapes: [shapeResource]))
     
     var component = GestureComponent()
-    component.canDrag = true
+    component.canDrag = draggable
     component.canScale = false
     component.canRotate = false
     boxEntity.components.set(component)

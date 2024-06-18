@@ -11,42 +11,33 @@ import RealityKitContent
 
 struct ContentView: View {
 
-    @State private var enlarge = false
-    @State private var showImmersiveSpace = false
-    @State private var immersiveSpaceIsShown = false
-    @State private var clickedNew = false
+//    @State private var enlarge = false
+//    @State private var showImmersiveSpace = false
+//    @State private var immersiveSpaceIsShown = false
+//    @State private var clickedNew = false
+    @State private var wordCardToAdd: WordCard?
 
-    @Environment(\.openImmersiveSpace) var openImmersiveSpace
-    @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
+//    @Environment(\.openImmersiveSpace) var openImmersiveSpace
+//    @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
 
     var body: some View {
-        RealityView { content in
-            guard let wordCard = createWordCardEntity(word: "supercalifragilistic") else {
-                print("failed to generate wordcard")
-                return
+        VStack {
+            RealityView { content in
+                content.add(WordCard(with: "foobar").modelEntity)
+            } update: { content in
+                // Update the RealityKit content when SwiftUI state changes
+                if let wordCardToAdd = wordCardToAdd {
+                    content.add(wordCardToAdd.modelEntity)
+                }
             }
-            guard let wordCard2 = createWordCardEntity(word: "i love isabel suh") else {
-                print("failed to generate wordcard")
-                return
-            }
-            print("adding wordcard")
-            content.add(wordCard)
-            content.add(wordCard2)
+            //.installGestures()
 
-        } update: { content in
-            // Update the RealityKit content when SwiftUI state changes
-            if let scene = content.entities.first {
-                let uniformScale: Float = enlarge ? 1.4 : 1.0
-                scene.transform.scale = [uniformScale, uniformScale, uniformScale]
-            }
-            
-            if clickedNew {
-                guard let wordCard = createWordCardEntity(word: "foo") else { return }
-                content.add(wordCard)
-            }
-            
         }
-        .installGestures()
+        WordReelView(wordStrings: ["oh", "thou", "that", "with", "surpassing", "glory", "crown'd"]) { newCard in
+            print("in closure from parent with newCard \(newCard)")
+            self.wordCardToAdd = newCard
+        }
+
 //        .onChange(of: showImmersiveSpace) { _, newValue in
 //            Task {
 //                if newValue {
@@ -65,24 +56,21 @@ struct ContentView: View {
 //                }
 //            }
 //        }
-        .gesture(TapGesture().targetedToAnyEntity().onEnded { _ in
-            enlarge.toggle()
-        })
-        .toolbar {
-            ToolbarItemGroup(placement: .bottomOrnament) {
-                VStack (spacing: 12) {
-                    Toggle("Enlarge RealityView Content", isOn: $enlarge)
-                    Toggle("Show ImmersiveSpace", isOn: $showImmersiveSpace)
-                    Button("Add new card") {
-                        clickedNew = true
-                        Task {
-                             try await Task.sleep(nanoseconds: 10_000)
-                             clickedNew = false
-                        }
-                    }
-                }
-            }
-        }
+//        .toolbar {
+//            ToolbarItemGroup(placement: .bottomOrnament) {
+//                VStack (spacing: 12) {
+//                    Toggle("Enlarge RealityView Content", isOn: $enlarge)
+//                    Toggle("Show ImmersiveSpace", isOn: $showImmersiveSpace)
+//                    Button("Add new card") {
+//                        clickedNew = true
+//                        Task {
+//                             try await Task.sleep(nanoseconds: 10_000)
+//                             clickedNew = false
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 }
 
