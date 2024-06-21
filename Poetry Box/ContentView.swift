@@ -15,28 +15,37 @@ struct ContentView: View {
 //    @State private var showImmersiveSpace = false
 //    @State private var immersiveSpaceIsShown = false
 //    @State private var clickedNew = false
+    
+    //    @Environment(\.openImmersiveSpace) var openImmersiveSpace
+    //    @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
     @State private var wordCardToAdd: WordCard?
 
-//    @Environment(\.openImmersiveSpace) var openImmersiveSpace
-//    @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
 
     var body: some View {
         VStack {
             RealityView { content in
-                content.add(WordCard(with: "foobar").modelEntity)
+                content.add(WordCard(with: "foobar", draggable: true).modelEntity)
             } update: { content in
                 // Update the RealityKit content when SwiftUI state changes
-                if let wordCardToAdd = wordCardToAdd {
-                    content.add(wordCardToAdd.modelEntity)
+                if let wordCard = wordCardToAdd {
+                    content.add(wordCard.modelEntity)
+                    DispatchQueue.main.async {
+                        wordCardToAdd = nil
+                    }
                 }
             }
-            //.installGestures()
+            .installGestures()
 
         }
-        WordReelView(wordStrings: ["oh", "thou", "that", "with", "surpassing", "glory", "crown'd"]) { newCard in
-            print("in closure from parent with newCard \(newCard)")
-            self.wordCardToAdd = newCard
-        }
+        WordReelView(wordStrings: ["oh", "thou", "that", "with", "surpassing", "glory", "crown'd"]) 
+            .gesture(TapGesture()
+                .onEnded {_ in
+                    print("TapGesture onended")
+                })
+//        { newCard in
+//            print("in closure from parent with newCard \(newCard)")
+//            wordCardToAdd = newCard
+//        }
 
 //        .onChange(of: showImmersiveSpace) { _, newValue in
 //            Task {

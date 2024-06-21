@@ -92,13 +92,27 @@ class WordReel: ObservableObject {
         }
     }
     
+    func updateHighlights() {
+        guard let middleCardIndex = getMiddleCardIndex() else {
+            return
+        }
+        for (i, card) in wordCards.enumerated() {
+            if (i == middleCardIndex) {
+                card.highlight()
+            } else {
+                card.unhighlight()
+            }
+        }
+    }
+    
     // This function is called when the "select" action (currently long-press) is detected on the wordReel.
     // It should give the user a card that they can put on a Board.
     func selectMiddleCard() -> WordCard? {
         // Calculate middle card
-        guard let middleCard = getMiddleCard() else {
+        guard let middleCardIndex = getMiddleCardIndex() else {
             return nil
         }
+        let middleCard = wordCards[middleCardIndex]
 
         // Remove the middle card if replaceWords is false
         if !replaceWords {
@@ -110,12 +124,12 @@ class WordReel: ObservableObject {
     }
     
     // Return the middle card entity.
-    private func getMiddleCard() -> WordCard? {
+    private func getMiddleCardIndex() -> Int? {
         let middleRotation = currentRotation
-        var closestCard: WordCard? = nil
+        var closestIndex: Int? = nil
         var closestDistance: Float = .infinity
 
-        for card in wordCards {
+        for (i, card) in wordCards.enumerated() {
             guard let cardRotationD = cardRotationDict[card.id]?.radians else {
                 continue
             }
@@ -123,10 +137,10 @@ class WordReel: ObservableObject {
             let distance = abs(cardRotation - middleRotation)
             if distance < closestDistance {
                 closestDistance = distance
-                closestCard = card
+                closestIndex = i
             }
         }
-        return closestCard
+        return closestIndex
     }
     
     private func positionCards() {

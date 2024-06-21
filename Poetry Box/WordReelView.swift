@@ -13,11 +13,11 @@ struct WordReelView: View {
     
     @State private var lastDragValue: CGFloat = 0
     
-    var selectWordCard: (WordCard) -> Void
+//    var selectWordCard: (WordCard) -> Void
     
-    init(wordStrings: [String], selectWordCard: @escaping (WordCard) -> Void) {
+    init(wordStrings: [String]/*, selectWordCard: @escaping (WordCard) -> Void*/) {
         self.wordReel = WordReel(wordStrings: wordStrings)
-        self.selectWordCard = selectWordCard
+        //self.selectWordCard = selectWordCard
     }
     
     var body: some View {
@@ -30,23 +30,23 @@ struct WordReelView: View {
                 let dragDelta = value.translation.height - lastDragValue
                 lastDragValue = value.translation.height
                 spinReel(by: dragDelta)
-                // TODO highlight
+                wordReel.updateVisibleCards()
+                wordReel.updateHighlights()
             }
             .onEnded { _ in
                 print("drag onended")
                 lastDragValue = 0
-                wordReel.updateVisibleCards()
             }
         )
-        .simultaneousGesture(TapGesture()
-            .onEnded { _ in
-                print("long press on ended")
-                if let newCard = wordReel.selectMiddleCard() {
-                    selectWordCard(newCard)
-                }
-
-            }
-        )
+//        .simultaneousGesture(TapGesture()
+//            .onEnded { _ in
+//                print("long press on ended")
+//                if let newCard = wordReel.selectMiddleCard() {
+//                    selectWordCard(newCard)
+//                }
+//
+//            }
+//        )
     }
     
     func spinReel(by delta: CGFloat) {
@@ -63,5 +63,5 @@ struct WordReelView: View {
 
 #Preview(windowStyle: .volumetric) {
     let words = ["shall", "i", "compare", "thee", "to", "a", "summer's", "day", "?", "thou", "art", "more", "lovely", "and", "more", "temperate", "rough", "winds", "do", "shake", "the", "darling", "buds", "of", "may", "and", "summer's", "lease", "hath", "all", "too", "short", "a", "date"]
-    WordReelView(wordStrings: words) {_ in }
+    //WordReelView(wordStrings: words) {_ in }
 }

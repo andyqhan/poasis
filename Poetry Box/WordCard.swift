@@ -26,6 +26,15 @@ struct WordCard {
         }
         self.modelEntity = entity
     }
+    
+    func highlight() {
+        // TODO if i add a light source i think i can make it metallic
+        self.modelEntity.model?.materials = [SimpleMaterial(color: .yellow, isMetallic: false)]
+    }
+    
+    func unhighlight() {
+        self.modelEntity.model?.materials = [SimpleMaterial(color: .white, isMetallic: false)]
+    }
 }
 
 func generateTextMesh(drawText text: String) -> MeshResource {
