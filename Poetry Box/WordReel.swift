@@ -11,9 +11,9 @@ import RealityKitContent
 
 class WordReel: ObservableObject {
     @Published var wordCards: [WordCard] = []
-    var reelEntity: Entity = Entity()
-    var currentRotation: Float = 0.0  // Keeps track of the Reel's rotation
-    var cardRotationDict: [UUID: Angle] = [:]
+    @Published var reelEntity: Entity = Entity()
+    @Published var currentRotation: Float = 0.0  // Keeps track of the Reel's rotation
+    @Published var cardRotationDict: [UUID: Angle] = [:]
     var replaceWords: Bool
     
     let anglePerCard = Angle(radians: .pi / Double(6))  // 30 degrees
@@ -152,7 +152,6 @@ class WordReel: ObservableObject {
             let z = radius * cos(angle.radians)
             let y = radius * sin(angle.radians)
             card.modelEntity.position = [0, Float(y), Float(z)] // Adjust positioning as needed
-            print("Word \(card.word) with index \(index) positioned with angle \(angle.degrees) degrees to \([0, y, z])")
             
             // Record the rotation in the angle dictionary for later
             cardRotationDict[card.id] = angle
