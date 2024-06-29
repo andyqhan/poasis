@@ -105,6 +105,16 @@ class WordReel: ObservableObject {
         }
     }
     
+    func spinReel(by delta: CGFloat) {
+        let rotationAngle = Float(delta / 100)  // Adjust the divisor for sensitivity
+        currentRotation += rotationAngle
+        reelEntity.transform.rotation *= simd_quatf(angle: rotationAngle, axis: [1, 0, 0])
+        //print("currentRotation now \(wordReel.currentRotation * (180.0 / .pi)) deg, entity's rotation \(wordReel.reelEntity.transform.rotation)")
+        
+        // Call updateVisibleCards to manage the visibility of cards during spinning
+        updateVisibleCards()
+    }
+    
     // This function is called when the "select" action (currently long-press) is detected on the wordReel.
     // It should give the user a card that they can put on a Board.
     func selectMiddleCard() -> WordCard? {
