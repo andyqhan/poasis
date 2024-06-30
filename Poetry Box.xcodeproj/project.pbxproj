@@ -41,6 +41,7 @@
 		926196372BD402C800CA2556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9261963C2BD402C800CA2556 /* Poetry BoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Poetry BoxTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		926196402BD402C800CA2556 /* Poetry_BoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poetry_BoxTests.swift; sourceTree = "<group>"; };
+		928423CB2C31FF24007635B6 /* todo.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = todo.md; sourceTree = "<group>"; };
 		92B4E95D2BF8F35400D8F203 /* WordReelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordReelView.swift; sourceTree = "<group>"; };
 		92B4E95F2BF8F89200D8F203 /* WordReel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordReel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -95,6 +96,7 @@
 				926196372BD402C800CA2556 /* Info.plist */,
 				926196342BD402C800CA2556 /* Preview Content */,
 				925395292BDEDA1400906D0F /* WordCard.swift */,
+				928423CB2C31FF24007635B6 /* todo.md */,
 			);
 			path = "Poetry Box";
 			sourceTree = "<group>";

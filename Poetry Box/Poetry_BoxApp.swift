@@ -10,16 +10,15 @@ import RealityKitContent
 
 @main
 struct Poetry_BoxApp: App {
+    @State private var immersionStyle: ImmersionStyle = .mixed
+    
     init() {
         RealityKitContent.GestureComponent.registerComponent()
     }
     var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }.windowStyle(.volumetric)
-
         ImmersiveSpace(id: "ImmersiveSpace") {
-            ImmersiveView()
+            ContentView()
         }
+        .immersionStyle(selection: $immersionStyle, in: .mixed)
     }
 }
