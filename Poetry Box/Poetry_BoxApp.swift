@@ -14,10 +14,11 @@ struct Poetry_BoxApp: App {
     
     init() {
         RealityKitContent.GestureComponent.registerComponent()
+        RealityKitContent.ConnectableStateComponent.registerComponent()
     }
     var body: some Scene {
         ImmersiveSpace(id: "ImmersiveSpace") {
-            ContentView()
+            CompositionView()
         }
         .immersionStyle(selection: $immersionStyle, in: .mixed)
     }

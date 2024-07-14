@@ -9,19 +9,42 @@ import SwiftUI
 import RealityKit
 import RealityKitContent
 
-struct ContentView: View {
-
+struct CompositionView: View {
+    @State private var dragStart = SIMD3<Float>.zero
+    @State private var isDragging = false
+    
     private var rootEntity: Entity = Entity()
 
 
     var body: some View {
-        VStack {
-            RealityView { content in
-                content.add(rootEntity)
-            }
-            .installGestures()
-
+        RealityView { content in
+            content.add(rootEntity)
         }
+        .gesture(DragGesture()
+            .targetedToAnyEntity()  // TODO maybe limit this to WordCards
+            .onChanged { value in
+                if !isDragging {
+                    isDragging = true
+                    dragStart = rootEntity.scenePosition
+                }
+                
+                let translation3D = value.convert(value.gestureValue.translation3D, from: .local, to: .scene)
+                
+                let offset = SIMD3<Float>(x: Float(translation3D.x),
+                                          y: Float(translation3D.y),
+                                          z: Float(translation3D.z))
+
+                
+                value.entity.scenePosition = dragStart + offset
+            }
+            .onEnded { value in
+                isDragging = false
+                dragStart = .zero
+            }
+        )
+        
+        
+        
         WordReelView(wordStrings: ["oh", "thou", "that", "with", "surpassing", "glory", "crown'd"]) { newCard in
             print("in closure from parent with newCard \(newCard)")
 
@@ -65,5 +88,5 @@ struct ContentView: View {
 }
 
 #Preview(windowStyle: .volumetric) {
-    ContentView()
+    CompositionView()
 }

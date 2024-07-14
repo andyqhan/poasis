@@ -54,10 +54,11 @@ struct WordReelView: View {
                                               z: Float(translation3D.z))
                     
                     
-                    rootEntity.transform.translation = rootDragStart + offset
+                    rootEntity.scenePosition = rootDragStart + offset
                 }
                 .onEnded { value in
                     isDragging = false
+                    rootDragStart = .zero
                 }
             )
             .gesture(DragGesture()
@@ -77,7 +78,6 @@ struct WordReelView: View {
             .gesture(TapGesture()
                 .targetedToEntity(wordReel.reelEntity)
                 .onEnded { _ in
-                    print("long press on ended")
                     if let newCard = wordReel.selectMiddleCard() {
                         selectWordCard(newCard)
                     }
