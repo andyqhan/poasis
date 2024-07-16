@@ -7,6 +7,7 @@ Taken from SwiftSplash.
 
 import SwiftUI
 import RealityKit
+import RealityKitContent
 import simd
 
 struct DragSnapInfo: Sendable {
@@ -40,80 +41,54 @@ extension CompositionView {
         // The target board
         var board: Entity? = nil
         
-        if let firstPiece = firstPiece {
-            let inConnectionFirst = appState.findNearestConnectionPoint(entity: firstPiece, connectionType: .inPoint)
-            firstDistance = inConnectionFirst.distance
-            firstConnection = inConnectionFirst.closestEntity
+        guard let wordCard = wordCard else {
+            return
         }
-        if let lastPiece = lastPiece {
-            let outConnectionLast = appState.findNearestConnectionPoint(entity: lastPiece, connectionType: .outPoint)
-            lastDistance = outConnectionLast.distance
-            lastConnection = outConnectionLast.closestEntity
-        }
-        let distance = min(firstDistance, lastDistance)
-        let snapTo = (firstDistance <= lastDistance) ? firstConnection : lastConnection
-        let connectionType: ConnectionPointType = (firstDistance <= lastDistance) ? .inPoint : .outPoint
+        
+        let nearestBoard = findNearestBoard(wordCard: wordCard)
+        let closestBoardPoint = nearestBoard.closestPoint  // where we snap to
+        distance = nearestBoard.distance
+        
+        let wordCardCenterPoint = wordCard.visualBounds(relativeTo: nil).center  // TODO: is this the right wa to do this?
         
         // Nothing in snap distance, return.
         guard distance < maximumSnapDistance,
-              let entity = (connectionType == .inPoint) ? firstPiece : lastPiece,
-              let snapTo = snapTo,
-              let ourSnapPoint = (connectionType == .inPoint) ? entity.inConnection?.scenePosition : entity.outConnection?.scenePosition,
-              let otherSnapPoint = (connectionType == .inPoint) ? snapTo.outConnection?.scenePosition : snapTo.inConnection?.scenePosition,
-              let ourConnectionVectorEntity = (connectionType == .inPoint) ? entity.inConnectionVector : entity.outConnectionVector,
-              let otherConnectionVectorEntity = (connectionType == .inPoint) ? snapTo.outConnectionVector : snapTo.inConnectionVector else {
-            logger.info("Returning because snap distance too large, or snap point or entity is nil")
+              let board = nearestBoard.closestBoard,
+              let closestBoardPoint = closestBoardPoint
+        else {
             isSnapping = false
             isDragging = false
             isRotating = false
             return
         }
+                
+        // TODO: Check vectors to make sure the board and the card are coplanar.
+//        let wordCardNormalVector =
+//        let boardNormalVector =
+//        let dotProduct = simd_dot(simd_normalize(boardNormalVector), simd_normalize(wordCardNormalVector))
+        // TODO: If they're not coplanar, then make them so.
+//        if dotProduct != 1 {
+//
+//        }
         
-        let ourConnectionVector = ourConnectionVectorEntity.scenePosition - entity.scenePosition
-        let otherConnectionVector = otherConnectionVectorEntity.scenePosition - snapTo.scenePosition
-        
-        // Check vectors to make sure the pieces are pointing in opposite directions.
-        let dotProduct = simd_dot(simd_normalize(ourConnectionVector), simd_normalize(otherConnectionVector))
-        
-        if !((dotProduct > 0.95 && dotProduct < 1.05) ||
-            (dotProduct < -0.95 && dotProduct > -1.05)) {
-            isSnapping = false
-            isDragging = false
-            isRotating = false
-            return
-        }
-        
-        // If there's already comething connected to it, the piece doesn't snap.
-        if (connectionType == .inPoint && snapTo.connectableStateComponent?.nextPiece != nil
-            && snapTo.connectableStateComponent?.nextPiece != entity)
-            || (connectionType == .outPoint && snapTo.connectableStateComponent?.previousPiece != nil
-                && snapTo.connectableStateComponent?.previousPiece != entity) {
-            logger.info("Track pieces don't snap if there's already a piece attached to the snap point. Returning.")
-            isSnapping = false
-            isDragging = false
-            isRotating = false
-            return
-        }
+        // TODO: If snapping would overlap with a wordCard already on the board, then don't snap.
+//        if (snapping would overlap) {
+//            logger.info("Track pieces don't snap if there's already a piece attached to the snap point. Returning.")
+//            isSnapping = false
+//            isDragging = false
+//            isRotating = false
+//            return
+//        }
         
         // Snap the pieces together.
         Task(priority: .userInitiated) {
             let lastMoved = Date.timeIntervalSinceReferenceDate
             let startTime = Date.timeIntervalSinceReferenceDate
-            let deltaVector = otherSnapPoint - ourSnapPoint
+            let deltaVector = closestBoardPoint - wordCardCenterPoint
             let dragStartPosition = draggedEntity.scenePosition
             let dragEndPosition = dragStartPosition + deltaVector
             
-            var piecesToMove = [Entity]()
-            if draggedEntity != appState.trackPieceBeingEdited && !appState.additionalSelectedTrackPieces.contains(draggedEntity) {
-                appState.clearSelection()
-            } else {
-                guard let trackPieceBeingEdited = appState.trackPieceBeingEdited else {
-                    isSnapping = true
-                    return
-                }
-                piecesToMove.append(trackPieceBeingEdited)
-                piecesToMove.append(contentsOf: appState.additionalSelectedTrackPieces)
-            }
+            // Move the card with animation.
             var now = Date.timeIntervalSinceReferenceDate
             while now <= lastMoved + secondsAfterDragToContinueSnap {
                 now = Date.timeIntervalSinceReferenceDate
@@ -126,12 +101,6 @@ extension CompositionView {
                 Task { @MainActor in
                     draggedEntity.scenePosition = newPosition
                 }
-                let others = piecesToMove.filter { $0 != draggedEntity }
-                for other in others {
-                    Task { @MainActor in
-                        other.scenePosition += otherDelta
-                    }
-                }
                 
                 // Wait for one 90FPS frame.
                 try? await Task.sleep(for: .milliseconds(11.111_11))
@@ -139,8 +108,6 @@ extension CompositionView {
             isSnapping = false
             isDragging = false
             isRotating = false
-            appState.updateConnections()
-            appState.updateVisuals()
         }
     }
 }
@@ -164,6 +131,45 @@ func quarticLerp(_ start: SIMD3<Float>, _ end: SIMD3<Float>, _ alpha: Float) -> 
 }
 
 
-func findNearestBoard (wordCard: Entity) -> (closestBoard: Entity?, distance: Float) {
-    // TODO: go to the parent of wordCard (root) and find all children which are Boards, compute distance, return least
+func findNearestBoard (wordCard: Entity) -> (closestBoard: Entity?, closestPoint: SIMD3<Float>?, distance: Float) {
+    let boardQuery = EntityQuery(where: .has(RealityKitContent.BoardComponent.self))
+    
+    guard let boards = wordCard.scene?.performQuery(boardQuery) else { return (nil, nil, Float.greatestFiniteMagnitude) }
+    
+    var closestDistance = Float.greatestFiniteMagnitude
+    var closestPoint = SIMD3<Float>.zero
+    var closestBoard: Entity? = nil
+    boards.forEach() { board in
+        
+        let boardBoundingBox = board.visualBounds(relativeTo: nil)
+        let cardCenter = wordCard.visualBounds(relativeTo: nil).center
+        
+        let distance = boardBoundingBox.distanceSquared(toPoint: cardCenter)
+        let point = boardBoundingBox.closestPoint(toPoint: cardCenter)
+        
+        if distance < closestDistance {
+            closestDistance = distance
+            closestPoint = point
+            closestBoard = board
+        }
+    }
+    
+    return (closestBoard, closestPoint, closestDistance)
+
+}
+
+extension BoundingBox {
+    // thanks Claude
+    func closestPoint(toPoint point: SIMD3<Float>) -> SIMD3<Float> {
+        let minBound = self.min
+        let maxBound = self.max
+        
+        // Clamp the point to the bounding box
+        /// Independently project each of the target point's components onto the surface of the box. This ensures that it's the closest. Try it irl.
+        let x = Swift.max(minBound.x, Swift.min(maxBound.x, point.x))
+        let y = Swift.max(minBound.y, Swift.min(maxBound.y, point.y))
+        let z = Swift.max(minBound.z, Swift.min(maxBound.z, point.z))
+        
+        return SIMD3<Float>(x, y, z)
+    }
 }

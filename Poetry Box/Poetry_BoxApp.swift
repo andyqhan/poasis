@@ -15,6 +15,7 @@ struct Poetry_BoxApp: App {
     init() {
         RealityKitContent.GestureComponent.registerComponent()
         RealityKitContent.ConnectableStateComponent.registerComponent()
+        RealityKitContent.BoardComponent.registerComponent()
     }
     var body: some Scene {
         ImmersiveSpace(id: "ImmersiveSpace") {
