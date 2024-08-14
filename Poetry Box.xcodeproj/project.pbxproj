@@ -20,6 +20,7 @@
 		928F95B62C44026B0031B15A /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928F95B52C44026B0031B15A /* AppConfig.swift */; };
 		92B4E95E2BF8F35400D8F203 /* WordReelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B4E95D2BF8F35400D8F203 /* WordReelView.swift */; };
 		92B4E9602BF8F89200D8F203 /* WordReel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B4E95F2BF8F89200D8F203 /* WordReel.swift */; };
+		92D9B3832C6C22B2003FF119 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D9B3822C6C22B2003FF119 /* AppState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		928F95B52C44026B0031B15A /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		92B4E95D2BF8F35400D8F203 /* WordReelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordReelView.swift; sourceTree = "<group>"; };
 		92B4E95F2BF8F89200D8F203 /* WordReel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordReel.swift; sourceTree = "<group>"; };
+		92D9B3822C6C22B2003FF119 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				926196342BD402C800CA2556 /* Preview Content */,
 				925395292BDEDA1400906D0F /* WordCard.swift */,
 				928423CB2C31FF24007635B6 /* todo.md */,
+				92D9B3822C6C22B2003FF119 /* AppState.swift */,
 			);
 			path = "Poetry Box";
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				928F95B62C44026B0031B15A /* AppConfig.swift in Sources */,
+				92D9B3832C6C22B2003FF119 /* AppState.swift in Sources */,
 				928F95B22C43F6460031B15A /* BoardView.swift in Sources */,
 				92B4E95E2BF8F35400D8F203 /* WordReelView.swift in Sources */,
 				9261962F2BD402C600CA2556 /* CompositionView.swift in Sources */,

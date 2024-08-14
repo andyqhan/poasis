@@ -105,6 +105,7 @@ extension CompositionView {
                 // Wait for one 90FPS frame.
                 try? await Task.sleep(for: .milliseconds(11.111_11))
             }
+            // TODO: make board parent of wordcard
             isSnapping = false
             isDragging = false
             isRotating = false

@@ -1,6 +1,8 @@
+import ARKit
 import Foundation
 import OSLog
 import RealityKit
+import SwiftUI
 
 /// Indicate how close two compatible connection points have to be
 /// in order to snap.

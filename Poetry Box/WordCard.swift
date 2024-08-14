@@ -19,12 +19,12 @@ struct WordCard {
         self.id = UUID()
         self.word = wordString
         self.draggable = draggable
-        guard let entity = createWordCardEntity(word: wordString, draggable: draggable) else {
+        guard let wordCardEntity = createWordCardEntity(word: wordString, draggable: draggable) else {
             print("Couldn't generate wordCardentity!")
             self.modelEntity = ModelEntity()
             return
         }
-        self.modelEntity = entity
+        self.modelEntity = wordCardEntity
     }
     
     func highlight() {

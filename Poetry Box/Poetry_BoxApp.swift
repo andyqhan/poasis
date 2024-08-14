@@ -9,8 +9,10 @@ import SwiftUI
 import RealityKitContent
 
 @main
+@MainActor
 struct Poetry_BoxApp: App {
     @State private var immersionStyle: ImmersionStyle = .mixed
+    @State private var appState = AppState()
     
     init() {
         RealityKitContent.GestureComponent.registerComponent()
@@ -20,6 +22,7 @@ struct Poetry_BoxApp: App {
     var body: some Scene {
         ImmersiveSpace(id: "ImmersiveSpace") {
             CompositionView()
+                .environment(appState)
         }
         .immersionStyle(selection: $immersionStyle, in: .mixed)
     }

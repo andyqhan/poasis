@@ -10,6 +10,7 @@ import RealityKit
 import RealityKitContent
 
 struct WordReelView: View {
+    @Environment(AppState.self) private var appState
     @ObservedObject var wordReel: WordReel
     
     @State private var lastReelDragValue: CGFloat = 0
@@ -55,6 +56,8 @@ struct WordReelView: View {
                     
                     
                     rootEntity.scenePosition = rootDragStart + offset
+                    
+                    rootEntity.lookAtCamera(worldInfo: appState.worldInfo)
                 }
                 .onEnded { value in
                     isDragging = false
@@ -80,8 +83,11 @@ struct WordReelView: View {
                 .onEnded { _ in
                     if let newCard = wordReel.selectMiddleCard() {
                         selectWordCard(newCard)
+                        var targetPosition = self.wordReel.reelEntity.scenePosition
+                        targetPosition.z += 0.2
+                        newCard.modelEntity.scenePosition = targetPosition
+                        newCard.modelEntity.lookAtCamera(worldInfo: appState.worldInfo)
                     }
-
                 }
             )
         }
@@ -90,5 +96,12 @@ struct WordReelView: View {
 
 #Preview(windowStyle: .volumetric) {
     let words = ["shall", "i", "compare", "thee", "to", "a", "summer's", "day", "?", "thou", "art", "more", "lovely", "and", "more", "temperate", "rough", "winds", "do", "shake", "the", "darling", "buds", "of", "may", "and", "summer's", "lease", "hath", "all", "too", "short", "a", "date"]
-    WordReelView(wordStrings: words) {_ in }
+    let rootEntity = ModelEntity()
+    RealityView { content in
+        content.add(rootEntity)
+    }
+    WordReelView(wordStrings: words) {wordCard in
+        rootEntity.addChild(wordCard.modelEntity)
+    }
+    .environment(AppState())
 }

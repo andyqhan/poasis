@@ -2,9 +2,12 @@
 //  ContentView.swift
 //  Poetry Box
 //
+//  The main view.
+//
 //  Created by Andy Han on 4/20/24.
 //
 
+import ARKit
 import SwiftUI
 import RealityKit
 import RealityKitContent
@@ -12,10 +15,10 @@ import RealityKitContent
 struct CompositionView: View {
     @State private var dragStart = SIMD3<Float>.zero
     @State private var isDragging = false
+    @Environment(AppState.self) private var appState
     
     private var rootEntity: Entity = Entity()
-
-
+    
     var body: some View {
         RealityView { content in
             content.add(rootEntity)
@@ -25,7 +28,7 @@ struct CompositionView: View {
             .onChanged { value in
                 if !isDragging {
                     isDragging = true
-                    dragStart = rootEntity.scenePosition
+                    dragStart = value.entity.scenePosition
                 }
                 
                 let translation3D = value.convert(value.gestureValue.translation3D, from: .local, to: .scene)
@@ -36,8 +39,18 @@ struct CompositionView: View {
 
                 
                 value.entity.scenePosition = dragStart + offset
+                value.entity.lookAtCamera(worldInfo: appState.worldInfo)
             }
             .onEnded { value in
+//                let snapInfo = DragSnapInfo(entity: value.entity, otherSelectedEntities: Array())
+//                let boardQuery = EntityQuery(where: .has(RealityKitContent.BoardComponent.self))
+//                guard let others = value.entity.scene?.performQuery(boardQuery) else {
+//                    print("No entities to snap to, returning.")
+//                    isDragging = false
+//                    return
+//                }
+//                handleSnap(snapInfo, allConnectableEntities: others)
+
                 isDragging = false
                 dragStart = .zero
             }
@@ -46,10 +59,11 @@ struct CompositionView: View {
         
         
         WordReelView(wordStrings: ["oh", "thou", "that", "with", "surpassing", "glory", "crown'd"]) { newCard in
-            print("in closure from parent with newCard \(newCard)")
-
             rootEntity.addChild(newCard.modelEntity)
         }
+            .environment(appState)
+        
+//        BoardView()
 
 //        .onChange(of: showImmersiveSpace) { _, newValue in
 //            Task {
@@ -89,4 +103,5 @@ struct CompositionView: View {
 
 #Preview(windowStyle: .volumetric) {
     CompositionView()
+        .environment(AppState())
 }

@@ -101,7 +101,7 @@ class WordReel: ObservableObject {
         let rotationAngle = Float(delta / 100)  // Adjust the divisor for sensitivity
         currentRotation += rotationAngle
         reelEntity.transform.rotation *= simd_quatf(angle: rotationAngle, axis: [1, 0, 0])
-        //print("currentRotation now \(wordReel.currentRotation * (180.0 / .pi)) deg, entity's rotation \(wordReel.reelEntity.transform.rotation)")
+//        print("currentRotation now \(currentRotation * (180.0 / .pi)) deg, entity's rotation \(reelEntity.transform.rotation)")
         
         // Call updateVisibleCards to manage the visibility of cards during spinning
         updateVisibleCards()
@@ -120,7 +120,6 @@ class WordReel: ObservableObject {
         if !replaceWords {
             removeCard(middleCard)
         }
-
         // Return a copy of the middle card
         return WordCard(with: middleCard.word, draggable: true)
     }
