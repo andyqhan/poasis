@@ -1,0 +1,106 @@
+[
+    {
+        "category": "Themes",
+        "wordlists": [
+            {
+                "title": "Nature words",
+                "color": "green",
+                "words": [
+                    "tree", "flower", "river", "mountain", "sky", "cloud", "sunshine", "rain", "wind", "leaf",
+                    "grass", "ocean", "forest", "meadow", "dawn", "dusk", "petal", "seed", "root", "branch",
+                    "verdant", "petrichor", "zephyr", "bioluminescence", "arboreal", "chrysalis", "gossamer",
+                    "riparian", "susurration", "ephemeral", "glade", "thicket", "canopy", "understory",
+                    "deciduous", "coniferous", "temperate", "tropical", "tundra", "savanna", "estuary", "fjord",
+                    "archipelago", "oasis", "atoll", "plateau", "gorge", "canyon", "geyser", "waterfall"
+                ]
+            },
+            {
+                "title": "Computer words",
+                "color": "blue",
+                "words": [
+                    "computer", "keyboard", "mouse", "monitor", "printer", "software", "hardware", "internet",
+                    "email", "website", "browser", "password", "file", "folder", "desktop", "laptop", "tablet",
+                    "smartphone", "network", "wi-fi", "algorithm", "blockchain", "qubit", "firewall",
+                    "neural network", "cryptography", "bandwidth", "hyperlink", "pixel", "cybernetic",
+                    "database", "cloud computing", "artificial intelligence", "machine learning", "encryption",
+                    "malware", "phishing", "cookies", "cache", "gui (graphical user interface)",
+                    "api (application programming interface)", "virtual reality", "augmented reality",
+                    "quantum computing", "motherboard", "ram (random access memory)", "cpu (central processing unit)",
+                    "gpu (graphics processing unit)", "serverless", "microservices"
+                ]
+            },
+            {
+                "title": "Science words",
+                "color": "red",
+                "words": [
+                    "science", "experiment", "hypothesis", "theory", "data", "observation", "microscope",
+                    "telescope", "atom", "molecule", "cell", "dna", "evolution", "gravity", "relativity",
+                    "quantum", "chemistry", "biology", "physics", "geology", "astronomy", "neuroscience",
+                    "thermodynamics", "entropy", "osmosis", "photosynthesis", "mitochondria", "covalent",
+                    "allele", "halide", "bernoulli", "nucleus", "electron", "proton", "neutron", "isotope",
+                    "catalyst", "enzyme", "polymer", "fusion", "fission", "genome", "protein", "ecosystem",
+                    "symbiosis", "homeostasis", "mutation", "radiation", "wavelength", "spectrum", "kinetics",
+                    "equilibrium", "oxidation", "reduction", "chromatography", "spectroscopy", "diffraction",
+                    "refraction", "crystallization", "fermentation"
+                ]
+            }
+        ]
+    },
+    {
+        "category": "Utilities",
+        "wordlists": [
+            {
+                "title": "Determiners and articles",
+                "color": "yellow",
+                "words": [
+                    "a", "an", "the", "this", "that", "these", "those", "some", "any", "each", "every", "no",
+                    "which", "what"
+                ]
+            },
+            {
+                "title": "Conjunctives",
+                "color": "orange",
+                "words": [
+                    "and", "but", "so", "after", "since", "before", "either", "neither", "or", "nor", "yet",
+                    "for", "although", "because", "if", "unless", "while", "whereas"
+                ]
+            },
+            {
+                "title": "Morphemes",
+                "color": "purple",
+                "words": [
+                    "-ly", "-tion", "-s", "ed", "-ing", "-er", "-est", "-ful", "-less", "-able", "-ible", "-ous",
+                    "-al", "-ive", "un-", "re-", "dis-", "pre-"
+                ]
+            },
+            {
+                "title": "Punctuation",
+                "color": "grey",
+                "words": [
+                    ".", ",", ";", ":", "!", "?", "-", "—", "(", ")", "[", "]", "{", "}", "\"", "'", "..."
+                ]
+            },
+            {
+                "title": "Prepositions",
+                "color": "brown",
+                "words": [
+                    "above", "except", "from", "in", "near", "of", "before", "since", "about", "across",
+                    "after", "against", "along", "among", "around", "at", "behind", "below", "beneath",
+                    "beside", "between", "beyond", "by", "down", "during", "for", "into", "off", "on",
+                    "onto", "out", "over", "through", "to", "toward", "under", "up", "upon", "with",
+                    "within", "without"
+                ]
+            },
+            {
+                "title": "Pronouns",
+                "color": "pink",
+                "words": [
+                    "he", "him", "his", "she", "her", "hers", "I", "me", "my", "mine", "it", "its", "that",
+                    "this", "those", "they", "their", "theirs", "we", "us", "our", "ours", "you", "your",
+                    "yours", "who", "whom", "whose", "which", "what", "whoever", "whomever", "whatever"
+                ]
+            }
+        ]
+    }
+]
+

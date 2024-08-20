@@ -17,87 +17,97 @@ struct CompositionView: View {
     @State private var isDragging = false
     @Environment(AppState.self) private var appState
     
+    @State private var wordReelViews: [WordReelView] = []
+    
     private var rootEntity: Entity = Entity()
     
     var body: some View {
-        RealityView { content in
-            content.add(rootEntity)
-        }
-        .gesture(DragGesture()
-            .targetedToAnyEntity()  // TODO maybe limit this to WordCards
-            .onChanged { value in
-                if !isDragging {
-                    isDragging = true
-                    dragStart = value.entity.scenePosition
+        ZStack {
+            RealityView { content in
+                content.add(rootEntity)
+            }
+            .gesture(DragGesture()
+                .targetedToAnyEntity()  // TODO maybe limit this to WordCards
+                .onChanged { value in
+                    if !isDragging {
+                        isDragging = true
+                        dragStart = value.entity.scenePosition
+                    }
+                    
+                    let translation3D = value.convert(value.gestureValue.translation3D, from: .local, to: .scene)
+                    
+                    let offset = SIMD3<Float>(x: Float(translation3D.x),
+                                              y: Float(translation3D.y),
+                                              z: Float(translation3D.z))
+
+                    
+                    value.entity.scenePosition = dragStart + offset
+                    value.entity.lookAtCamera(worldInfo: appState.worldInfo)
                 }
-                
-                let translation3D = value.convert(value.gestureValue.translation3D, from: .local, to: .scene)
-                
-                let offset = SIMD3<Float>(x: Float(translation3D.x),
-                                          y: Float(translation3D.y),
-                                          z: Float(translation3D.z))
+                .onEnded { value in
+    //                let snapInfo = DragSnapInfo(entity: value.entity, otherSelectedEntities: Array())
+    //                let boardQuery = EntityQuery(where: .has(RealityKitContent.BoardComponent.self))
+    //                guard let others = value.entity.scene?.performQuery(boardQuery) else {
+    //                    print("No entities to snap to, returning.")
+    //                    isDragging = false
+    //                    return
+    //                }
+    //                handleSnap(snapInfo, allConnectableEntities: others)
 
-                
-                value.entity.scenePosition = dragStart + offset
-                value.entity.lookAtCamera(worldInfo: appState.worldInfo)
+                    isDragging = false
+                    dragStart = .zero
+                }
+            )
+            
+            BoxSelectionView { selectedWordList in
+                let newWordReelView = WordReelView(wordStrings: selectedWordList) { newCard in
+                    rootEntity.addChild(newCard.modelEntity)
+                }
+                wordReelViews.append(newWordReelView)
             }
-            .onEnded { value in
-//                let snapInfo = DragSnapInfo(entity: value.entity, otherSelectedEntities: Array())
-//                let boardQuery = EntityQuery(where: .has(RealityKitContent.BoardComponent.self))
-//                guard let others = value.entity.scene?.performQuery(boardQuery) else {
-//                    print("No entities to snap to, returning.")
-//                    isDragging = false
-//                    return
-//                }
-//                handleSnap(snapInfo, allConnectableEntities: others)
+            
+            ForEach(wordReelViews.indices, id: \.self) { index in
+                wordReelViews[index]
+                    .environment(appState)
+            }
+            
+    //        BoardView()
 
-                isDragging = false
-                dragStart = .zero
-            }
-        )
-        
-        
-        
-        WordReelView(wordStrings: ["oh", "thou", "that", "with", "surpassing", "glory", "crown'd"]) { newCard in
-            rootEntity.addChild(newCard.modelEntity)
+    //        .onChange(of: showImmersiveSpace) { _, newValue in
+    //            Task {
+    //                if newValue {
+    //                    switch await openImmersiveSpace(id: "ImmersiveSpace") {
+    //                    case .opened:
+    //                        immersiveSpaceIsShown = true
+    //                    case .error, .userCancelled:
+    //                        fallthrough
+    //                    @unknown default:
+    //                        immersiveSpaceIsShown = false
+    //                        showImmersiveSpace = false
+    //                    }
+    //                } else if immersiveSpaceIsShown {
+    //                    await dismissImmersiveSpace()
+    //                    immersiveSpaceIsShown = false
+    //                }
+    //            }
+    //        }
+    //        .toolbar {
+    //            ToolbarItemGroup(placement: .bottomOrnament) {
+    //                VStack (spacing: 12) {
+    //                    Toggle("Enlarge RealityView Content", isOn: $enlarge)
+    //                    Toggle("Show ImmersiveSpace", isOn: $showImmersiveSpace)
+    //                    Button("Add new card") {
+    //                        clickedNew = true
+    //                        Task {
+    //                             try await Task.sleep(nanoseconds: 10_000)
+    //                             clickedNew = false
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //        }
         }
-            .environment(appState)
         
-//        BoardView()
-
-//        .onChange(of: showImmersiveSpace) { _, newValue in
-//            Task {
-//                if newValue {
-//                    switch await openImmersiveSpace(id: "ImmersiveSpace") {
-//                    case .opened:
-//                        immersiveSpaceIsShown = true
-//                    case .error, .userCancelled:
-//                        fallthrough
-//                    @unknown default:
-//                        immersiveSpaceIsShown = false
-//                        showImmersiveSpace = false
-//                    }
-//                } else if immersiveSpaceIsShown {
-//                    await dismissImmersiveSpace()
-//                    immersiveSpaceIsShown = false
-//                }
-//            }
-//        }
-//        .toolbar {
-//            ToolbarItemGroup(placement: .bottomOrnament) {
-//                VStack (spacing: 12) {
-//                    Toggle("Enlarge RealityView Content", isOn: $enlarge)
-//                    Toggle("Show ImmersiveSpace", isOn: $showImmersiveSpace)
-//                    Button("Add new card") {
-//                        clickedNew = true
-//                        Task {
-//                             try await Task.sleep(nanoseconds: 10_000)
-//                             clickedNew = false
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
 }
 
