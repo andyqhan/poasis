@@ -12,6 +12,7 @@ struct WordList: Codable {
     let title: String
     let color: String
     let words: [String]
+    let sorted: Bool
     
     var swiftUIColor: Color {
         switch color.lowercased() {
@@ -25,7 +26,16 @@ struct WordList: Codable {
             return .orange
         case "purple":
             return .purple
+        case "pink":
+            return .pink
+        case "yellow":
+            return .yellow
+        case "gray":
+            return .gray
+        case "brown":
+            return .brown
         default:
+            print("Couldn't find color for: \(color)")
             return .gray // Fallback color
         }
     }
@@ -67,11 +77,15 @@ struct Chip: View {
             action()
         }) {
             VStack {
-                Text(title)
-                    .font(.headline)
-                    .multilineTextAlignment(.leading)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding([.top, .leading], 10)
+                HStack {
+                    Text(title)
+                        .font(.headline)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding([.top, .leading], 10)
+                    Spacer()
+                }
+                
                 Spacer()
             }
            
@@ -87,7 +101,7 @@ struct Chip: View {
 
 struct BoxSelectionView: View {
     @ObservedObject var dataLoader = DataLoader()
-    var onSelected: (([String]) -> Void) // callback closure
+    var onSelected: (([String], String, Color) -> Void) // callback closure
     
     let columns = [
         GridItem(.flexible()),
@@ -107,24 +121,19 @@ struct BoxSelectionView: View {
                 LazyVGrid(columns: columns, spacing: 15) {
                     ForEach(dataLoader.categories.flatMap { $0.wordlists }, id: \.title) { wordlist in
                         Chip(title: wordlist.title, color: wordlist.swiftUIColor) {
-                            onSelected(wordlist.words)
+                            let words = deduplicate(array: wordlist.words)
+                            if wordlist.sorted {
+                                onSelected(words, wordlist.title, wordlist.swiftUIColor)
+                            } else {
+                                // randomize
+                                onSelected(words.shuffled(), wordlist.title, wordlist.swiftUIColor)
+                            }
                         }
                     }
                 }
                 .padding(.horizontal)
-                .border(.blue)
             }
             .padding(.horizontal)
-            .border(.gray)
-
-            
-            
-            
-            Spacer()
-            
-            Text("More content coming soon...")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
             
             Spacer()
         }
@@ -140,10 +149,24 @@ struct BoxSelectionView: View {
         let totalWidth = (chipWidth * CGFloat(columns.count)) + (spacing * CGFloat(columns.count - 1))
         return totalWidth
     }
+    
+    private func deduplicate<T: Hashable>(array: [T]) -> [T] {
+        var seen = Set<T>()
+        var result = [T]()
+        
+        for element in array {
+            if !seen.contains(element) {
+                seen.insert(element)
+                result.append(element)
+            }
+        }
+        
+        return result
+    }
 }
 
 #Preview {
-    BoxSelectionView() { wordlist in
+    BoxSelectionView() { wordlist, title, color in
         print("Selected wordlist \(wordlist)")
     }
 }

@@ -20,25 +20,45 @@ struct WordReelView: View {
     private var rootEntity = Entity()
     private var plinthEntity = Entity()
     
+    private var title: String
+    private var color: Color
+    
     var selectWordCard: (WordCard) -> Void
     
-    init(wordStrings: [String], selectWordCard: @escaping (WordCard) -> Void) {
+    init(wordStrings: [String], title: String, color: Color, selectWordCard: @escaping (WordCard) -> Void) {
         self.wordReel = WordReel(wordStrings: wordStrings)
         self.selectWordCard = selectWordCard
         
         self.plinthEntity = try! Entity.load(named: "Plinth", in: RealityKitContent.realityKitContentBundle)
         self.plinthEntity.name = "Plinth"
         
+        self.title = title
+        self.color = color
+        
         wordReel.updateHighlights()
     }
     
     var body: some View {
-            RealityView { content in
+            RealityView { content, attachments in
                 content.add(rootEntity)
                 rootEntity.addChild(plinthEntity)
                 rootEntity.addChild(wordReel.reelEntity)
                 wordReel.reelEntity.transform.translation.y += 0.25 // scooch it down
                 print(plinthEntity)
+                if let label = attachments.entity(for: "label") {
+                    // bro this is so hacky lol
+                    label.transform.translation.z += 0.15
+                    label.transform.translation.y -= 0.05
+                    plinthEntity.addChild(label)
+                }
+            } attachments: {
+                Attachment(id: "label") {
+                    Text(self.title)
+                        .font(.largeTitle)
+                        .padding()
+                        .background(self.color)
+                        .glassBackgroundEffect()
+                }
             }
             .gesture(DragGesture()
                 .targetedToEntity(plinthEntity)
@@ -100,7 +120,7 @@ struct WordReelView: View {
     RealityView { content in
         content.add(rootEntity)
     }
-    WordReelView(wordStrings: words) {wordCard in
+    WordReelView(wordStrings: words, title: "Test label", color: Color.blue) {wordCard in
         rootEntity.addChild(wordCard.modelEntity)
     }
     .environment(AppState())

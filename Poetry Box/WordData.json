@@ -5,6 +5,7 @@
             {
                 "title": "Nature words",
                 "color": "green",
+                "sorted": false,
                 "words": [
                     "tree", "flower", "river", "mountain", "sky", "cloud", "sunshine", "rain", "wind", "leaf",
                     "grass", "ocean", "forest", "meadow", "dawn", "dusk", "petal", "seed", "root", "branch",
@@ -17,6 +18,7 @@
             {
                 "title": "Computer words",
                 "color": "blue",
+                "sorted": false,
                 "words": [
                     "computer", "keyboard", "mouse", "monitor", "printer", "software", "hardware", "internet",
                     "email", "website", "browser", "password", "file", "folder", "desktop", "laptop", "tablet",
@@ -32,6 +34,7 @@
             {
                 "title": "Science words",
                 "color": "red",
+                "sorted": false,
                 "words": [
                     "science", "experiment", "hypothesis", "theory", "data", "observation", "microscope",
                     "telescope", "atom", "molecule", "cell", "dna", "evolution", "gravity", "relativity",
@@ -52,6 +55,7 @@
             {
                 "title": "Determiners and articles",
                 "color": "yellow",
+                "sorted": true,
                 "words": [
                     "a", "an", "the", "this", "that", "these", "those", "some", "any", "each", "every", "no",
                     "which", "what"
@@ -60,6 +64,7 @@
             {
                 "title": "Conjunctives",
                 "color": "orange",
+                "sorted": true,
                 "words": [
                     "and", "but", "so", "after", "since", "before", "either", "neither", "or", "nor", "yet",
                     "for", "although", "because", "if", "unless", "while", "whereas"
@@ -68,6 +73,7 @@
             {
                 "title": "Morphemes",
                 "color": "purple",
+                "sorted": true,
                 "words": [
                     "-ly", "-tion", "-s", "ed", "-ing", "-er", "-est", "-ful", "-less", "-able", "-ible", "-ous",
                     "-al", "-ive", "un-", "re-", "dis-", "pre-"
@@ -75,7 +81,8 @@
             },
             {
                 "title": "Punctuation",
-                "color": "grey",
+                "color": "gray",
+                "sorted": true,
                 "words": [
                     ".", ",", ";", ":", "!", "?", "-", "—", "(", ")", "[", "]", "{", "}", "\"", "'", "..."
                 ]
@@ -83,6 +90,7 @@
             {
                 "title": "Prepositions",
                 "color": "brown",
+                "sorted": false,
                 "words": [
                     "above", "except", "from", "in", "near", "of", "before", "since", "about", "across",
                     "after", "against", "along", "among", "around", "at", "behind", "below", "beneath",
@@ -94,6 +102,7 @@
             {
                 "title": "Pronouns",
                 "color": "pink",
+                "sorted": false,
                 "words": [
                     "he", "him", "his", "she", "her", "hers", "I", "me", "my", "mine", "it", "its", "that",
                     "this", "those", "they", "their", "theirs", "we", "us", "our", "ours", "you", "your",

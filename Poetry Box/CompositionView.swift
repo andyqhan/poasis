@@ -39,37 +39,48 @@ struct CompositionView: View {
                     let offset = SIMD3<Float>(x: Float(translation3D.x),
                                               y: Float(translation3D.y),
                                               z: Float(translation3D.z))
-
+                    
                     
                     value.entity.scenePosition = dragStart + offset
                     value.entity.lookAtCamera(worldInfo: appState.worldInfo)
                 }
                 .onEnded { value in
-    //                let snapInfo = DragSnapInfo(entity: value.entity, otherSelectedEntities: Array())
-    //                let boardQuery = EntityQuery(where: .has(RealityKitContent.BoardComponent.self))
-    //                guard let others = value.entity.scene?.performQuery(boardQuery) else {
-    //                    print("No entities to snap to, returning.")
-    //                    isDragging = false
-    //                    return
-    //                }
-    //                handleSnap(snapInfo, allConnectableEntities: others)
-
+                    //                let snapInfo = DragSnapInfo(entity: value.entity, otherSelectedEntities: Array())
+                    //                let boardQuery = EntityQuery(where: .has(RealityKitContent.BoardComponent.self))
+                    //                guard let others = value.entity.scene?.performQuery(boardQuery) else {
+                    //                    print("No entities to snap to, returning.")
+                    //                    isDragging = false
+                    //                    return
+                    //                }
+                    //                handleSnap(snapInfo, allConnectableEntities: others)
+                    
                     isDragging = false
                     dragStart = .zero
                 }
             )
             
-            BoxSelectionView { selectedWordList in
-                let newWordReelView = WordReelView(wordStrings: selectedWordList) { newCard in
-                    rootEntity.addChild(newCard.modelEntity)
+            VStack {
+                BoxSelectionView { selectedWordList, title, color in
+                    let newWordReelView = WordReelView(wordStrings: selectedWordList, title: title, color: color) { newCard in
+                        rootEntity.addChild(newCard.modelEntity)
+                    }
+                    wordReelViews.append(newWordReelView)
                 }
-                wordReelViews.append(newWordReelView)
+                Spacer()
             }
             
+        }
+        .overlay(
             ForEach(wordReelViews.indices, id: \.self) { index in
                 wordReelViews[index]
                     .environment(appState)
-            }
+            }, alignment: .topTrailing
+        )
+        
+        
+        
+    }
+}
             
     //        BoardView()
 
@@ -106,10 +117,7 @@ struct CompositionView: View {
     //                }
     //            }
     //        }
-        }
-        
-    }
-}
+
 
 #Preview(windowStyle: .volumetric) {
     CompositionView()
