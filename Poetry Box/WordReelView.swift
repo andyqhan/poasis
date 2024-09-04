@@ -40,6 +40,13 @@ struct WordReelView: View {
     
     var body: some View {
             RealityView { content, attachments in
+                // Compute position to create word reel at
+                // TODO: Zero out the rotation with respect to the window. Currently it opens at whatever angle (up or down, sideways) that your head is at.
+                guard let anchor = appState.worldInfo.queryDeviceAnchor(atTimestamp: CACurrentMediaTime()) else { return }
+                var cameraTransform = Transform(matrix: anchor.originFromAnchorTransform)
+                cameraTransform.translation += SIMD3(0, 0, -2)
+                rootEntity.transform = cameraTransform
+                
                 content.add(rootEntity)
                 rootEntity.addChild(plinthEntity)
                 rootEntity.addChild(wordReel.reelEntity)

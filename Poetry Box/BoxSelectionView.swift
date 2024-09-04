@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import RealityKit
 
 struct WordList: Codable {
     let title: String
@@ -101,8 +102,9 @@ struct Chip: View {
 
 struct BoxSelectionView: View {
     @ObservedObject var dataLoader = DataLoader()
-    var onSelected: (([String], String, Color) -> Void) // callback closure
-    
+    @Environment(AppState.self) private var appState
+    @Environment(\.openImmersiveSpace) private var openImmersiveSpace
+
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -122,11 +124,18 @@ struct BoxSelectionView: View {
                     ForEach(dataLoader.categories.flatMap { $0.wordlists }, id: \.title) { wordlist in
                         Chip(title: wordlist.title, color: wordlist.swiftUIColor) {
                             let words = deduplicate(array: wordlist.words)
+                            
                             if wordlist.sorted {
-                                onSelected(words, wordlist.title, wordlist.swiftUIColor)
+                                let newWordReelView = WordReelView(wordStrings: words, title: wordlist.title, color: wordlist.swiftUIColor) { newCard in
+                                    appState.rootEntity.addChild(newCard.modelEntity)
+                                }
+                                appState.wordReelViews.append(newWordReelView)
                             } else {
                                 // randomize
-                                onSelected(words.shuffled(), wordlist.title, wordlist.swiftUIColor)
+                                let newWordReelView = WordReelView(wordStrings: words.shuffled(), title: wordlist.title, color: wordlist.swiftUIColor) { newCard in
+                                    appState.rootEntity.addChild(newCard.modelEntity)
+                                }
+                                appState.wordReelViews.append(newWordReelView)
                             }
                         }
                     }
@@ -137,10 +146,10 @@ struct BoxSelectionView: View {
             
             Spacer()
         }
-        .frame(width: 700, height: 500)
-        .cornerRadius(20)
-        .shadow(radius: 10)
-        .glassBackgroundEffect()
+        .task {
+            await openImmersiveSpace(id: "ImmersiveSpace")
+            appState.isImmersiveSpaceOpen = true
+        }
     }
     
     private func calculateGridWidth() -> CGFloat {
@@ -166,7 +175,6 @@ struct BoxSelectionView: View {
 }
 
 #Preview {
-    BoxSelectionView() { wordlist, title, color in
-        print("Selected wordlist \(wordlist)")
-    }
+    BoxSelectionView()
+        .environment(AppState())
 }

@@ -13,6 +13,7 @@ import RealityKitContent
 struct Poetry_BoxApp: App {
     @State private var immersionStyle: ImmersionStyle = .mixed
     @State private var appState = AppState()
+    @Environment(\.openImmersiveSpace) private var openImmersiveSpace
     
     init() {
         RealityKitContent.GestureComponent.registerComponent()
@@ -20,6 +21,11 @@ struct Poetry_BoxApp: App {
         RealityKitContent.BoardComponent.registerComponent()
     }
     var body: some Scene {
+        WindowGroup("Selection window", id: "selection") {
+            BoxSelectionView()
+                .environment(appState)
+        }
+        
         ImmersiveSpace(id: "ImmersiveSpace") {
             CompositionView()
                 .environment(appState)

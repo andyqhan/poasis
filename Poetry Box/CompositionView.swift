@@ -17,14 +17,10 @@ struct CompositionView: View {
     @State private var isDragging = false
     @Environment(AppState.self) private var appState
     
-    @State private var wordReelViews: [WordReelView] = []
-    
-    private var rootEntity: Entity = Entity()
-    
     var body: some View {
         ZStack {
             RealityView { content in
-                content.add(rootEntity)
+                content.add(appState.rootEntity)
             }
             .gesture(DragGesture()
                 .targetedToAnyEntity()  // TODO maybe limit this to WordCards
@@ -59,20 +55,10 @@ struct CompositionView: View {
                 }
             )
             
-            VStack {
-                BoxSelectionView { selectedWordList, title, color in
-                    let newWordReelView = WordReelView(wordStrings: selectedWordList, title: title, color: color) { newCard in
-                        rootEntity.addChild(newCard.modelEntity)
-                    }
-                    wordReelViews.append(newWordReelView)
-                }
-                Spacer()
-            }
-            
         }
         .overlay(
-            ForEach(wordReelViews.indices, id: \.self) { index in
-                wordReelViews[index]
+            ForEach(appState.wordReelViews.indices, id: \.self) { index in
+                appState.wordReelViews[index]
                     .environment(appState)
             }, alignment: .topTrailing
         )

@@ -15,3 +15,15 @@
 - Save Boards and come back to them later
 - Sounds
 - Different kinds of Boards with different kinds of snapping: lines, certain number of lines, certain number of words, etc
+
+
+Priorities
+- x Make main window appear right in front of user, as well as any selected boxes
+- Option to hide boxes (put button next to title)
+- Option to close/collapse boxes (put button next to title)
+- Redesign Plinth and WordCards
+- Add more words (especially verbs)
+- Fix corner radius on selection boxes
+- Make selection window prettier
+
+- Scrolling momentum (not that important)
