@@ -39,8 +39,8 @@ struct WordCard {
 
 func generateTextMesh(drawText text: String) -> MeshResource {
     return .generateText(text,
-                         extrusionDepth: 0.01,
-                         font: .systemFont(ofSize: 0.05),
+                         extrusionDepth: 0.001,
+                         font: .monospacedSystemFont(ofSize: 0.05, weight: .regular),
                          alignment: .center
     )
 }
@@ -50,20 +50,25 @@ func createWordCardEntity(word: String, draggable: Bool) -> ModelEntity? {
     let textMesh = generateTextMesh(drawText: word)
     let textBounds = textMesh.bounds
     let textMaterial = SimpleMaterial(color: .black, isMetallic: true)
-    let textEntity = ModelEntity(mesh: textMesh, materials: [textMaterial])
 
     // Generate the card entity
-    let padding = SIMD3<Float>(x: 0.05, y: 0.02, z: -0.005)
+    let padding = SIMD3<Float>(x: 0.05, y: 0.03, z: -0.005)
     var size = textBounds.extents
     size += padding
     
-    let boxMesh = MeshResource.generateBox(size: size)
-    
-    let boxMaterial = SimpleMaterial(color: .white, isMetallic: false)
+    let boxMesh = MeshResource.generatePlane(width: size.x, height: size.y, cornerRadius: 0.05)
+
+    var boxMaterial = PhysicallyBasedMaterial()
+    boxMaterial.baseColor = PhysicallyBasedMaterial.BaseColor(tint: .white)
+    boxMaterial.blending = PhysicallyBasedMaterial.Blending.transparent(opacity: 0.5)
+    boxMaterial.roughness = PhysicallyBasedMaterial.Roughness.init(floatLiteral: 0.5)
     
     let boxEntity = ModelEntity(mesh: boxMesh, materials: [boxMaterial])
     
-    boxEntity.addChild(textEntity)
+    // TODO: center textEntity (can't figure it out though)
+    let textEntity = ModelEntity(mesh: textMesh, materials: [textMaterial])
+    
+    boxEntity.addChild(textEntity, preservingWorldTransform: true)
     
     // Add gestures to the Anchor
     boxEntity.components.set(InputTargetComponent())
@@ -83,4 +88,14 @@ func createWordCardEntity(word: String, draggable: Bool) -> ModelEntity? {
     textEntity.transform.translation.y -= textBounds.extents.y/1.5
 
     return boxEntity
+}
+
+#Preview(windowStyle: .volumetric) {
+    RealityView { content in
+//        content.add(WordCard(with: "racecar").modelEntity)
+        content.add(WordCard(with: "summer's").modelEntity)
+
+//        content.add(WordCard(with: "!;.,'\"").modelEntity)
+
+    }
 }

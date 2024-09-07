@@ -42,10 +42,10 @@ struct WordReelView: View {
             RealityView { content, attachments in
                 // Compute position to create word reel at
                 // TODO: Zero out the rotation with respect to the window. Currently it opens at whatever angle (up or down, sideways) that your head is at.
-                guard let anchor = appState.worldInfo.queryDeviceAnchor(atTimestamp: CACurrentMediaTime()) else { return }
-                var cameraTransform = Transform(matrix: anchor.originFromAnchorTransform)
-                cameraTransform.translation += SIMD3(0, 0, -2)
-                rootEntity.transform = cameraTransform
+//                guard let anchor = appState.worldInfo.queryDeviceAnchor(atTimestamp: CACurrentMediaTime()) else { return }
+//                var cameraTransform = Transform(matrix: anchor.originFromAnchorTransform)
+//                cameraTransform.translation += SIMD3(0, 0, -2)
+//                rootEntity.transform = cameraTransform
                 
                 content.add(rootEntity)
                 rootEntity.addChild(plinthEntity)
@@ -54,8 +54,8 @@ struct WordReelView: View {
                 print(plinthEntity)
                 if let label = attachments.entity(for: "label") {
                     // bro this is so hacky lol
-                    label.transform.translation.z += 0.15
-                    label.transform.translation.y -= 0.05
+                    label.transform.translation.y -= 0.15
+                    label.transform.rotation = simd_quatf(real: cos(.pi/4), imag: SIMD3<Float>(sin(.pi/4), 0.0, 0.0))
                     plinthEntity.addChild(label)
                 }
             } attachments: {
