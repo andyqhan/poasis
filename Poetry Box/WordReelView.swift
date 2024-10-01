@@ -17,11 +17,15 @@ struct WordReelView: View {
     @State private var rootDragStart: SIMD3<Float> = .zero
     @State private var isDragging = false
     
+    let id = UUID()
+    
     private var rootEntity = Entity()
     private var plinthEntity = Entity()
     
     private var title: String
     private var color: Color
+    
+    @State private var isCollapsed: Bool
     
     var selectWordCard: (WordCard) -> Void
     
@@ -35,7 +39,23 @@ struct WordReelView: View {
         self.title = title
         self.color = color
         
+        self.isCollapsed = false
+        
         wordReel.updateHighlights()
+    }
+    
+    func closeButtonTapped() {
+        // hide the box
+        print("close button")
+        // Remove this WordReelView from appState
+        appState.removeWordReelView(id: self.id)
+    }
+    
+    func collapseButtonTapped() {
+        // Collapse the box
+        print("hide words")
+        self.isCollapsed = !self.isCollapsed
+        wordReel.reelEntity.isEnabled = !self.isCollapsed
     }
     
     var body: some View {
@@ -60,11 +80,38 @@ struct WordReelView: View {
                 }
             } attachments: {
                 Attachment(id: "label") {
-                    Text(self.title)
-                        .font(.largeTitle)
-                        .padding()
-                        .background(self.color)
-                        .glassBackgroundEffect()
+                    HStack {
+
+                        Button(action: {
+                            self.closeButtonTapped()
+                        }) {
+                            Image(systemName: "xmark")
+                                .foregroundColor(.white)
+                                .frame(width: 24, height: 24)
+                        }
+                        .background(Color.black.opacity(0.5))
+                        .clipShape(Circle())
+                        
+
+                        Text(self.title)
+                            .font(.largeTitle)
+                            .lineLimit(1)
+                            .padding(.horizontal, 2)
+                        
+                        Button(action: {
+                            self.collapseButtonTapped()
+                        }) {
+                            Image(systemName: self.isCollapsed ? "chevron.up" : "chevron.down")
+                                .foregroundColor(.white)
+                                .frame(width: 24, height: 24)
+                        }
+                        .background(Color.black.opacity(0.5))
+                        .clipShape(Circle())
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 8)
+                    .background(self.color)
+                    .glassBackgroundEffect()
                 }
             }
             .gesture(DragGesture()
@@ -119,6 +166,9 @@ struct WordReelView: View {
             )
         }
         
+    static func == (l: WordReelView, r: WordReelView) -> Bool {
+        return l.id == r.id
+    }
 }
 
 #Preview(windowStyle: .volumetric) {
@@ -127,7 +177,7 @@ struct WordReelView: View {
     RealityView { content in
         content.add(rootEntity)
     }
-    WordReelView(wordStrings: words, title: "Test label", color: Color.blue) {wordCard in
+    WordReelView(wordStrings: words, title: "text label", color: Color.blue) {wordCard in
         rootEntity.addChild(wordCard.modelEntity)
     }
     .environment(AppState())

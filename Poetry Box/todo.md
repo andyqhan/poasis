@@ -19,12 +19,15 @@
 
 Priorities
 - x Make main window appear right in front of user, as well as any selected boxes
-- Redesign Plinth and WordCards
+- x Redesign Plinth and WordCards
 - Option to hide boxes (put button next to title)
 - Option to close/collapse boxes (put button next to title)
 - Add more words (especially verbs)
 - Fix corner radius on selection boxes
 - Make selection window prettier
+- Add readme
+  - Add screenshots
+  - Add installation instructions
 - Make scrolling on boxes continuous
 
 - Scrolling momentum (not that important)

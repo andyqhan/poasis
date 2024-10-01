@@ -30,4 +30,8 @@ public class AppState {
             }
         }
     }
+    
+    func removeWordReelView(id: UUID) {
+        wordReelViews.removeAll { $0.id == id }
+    }
 }
