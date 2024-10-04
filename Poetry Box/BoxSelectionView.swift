@@ -113,42 +113,47 @@ struct BoxSelectionView: View {
     ]
     
     var body: some View {
-        VStack {
+        GeometryReader3D { proxy in
+            VStack {
 
-            Text("Pick a box!")
-                .font(.largeTitle)
-                .padding()
-            
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVGrid(columns: columns, spacing: 15) {
-                    ForEach(dataLoader.categories.flatMap { $0.wordlists }, id: \.title) { wordlist in
-                        Chip(title: wordlist.title, color: wordlist.swiftUIColor) {
-                            let words = deduplicate(array: wordlist.words)
-                            
-                            if wordlist.sorted {
-                                let newWordReelView = WordReelView(wordStrings: words, title: wordlist.title, color: wordlist.swiftUIColor) { newCard in
-                                    appState.rootEntity.addChild(newCard.modelEntity)
+                Text("Pick a box!")
+                    .font(.largeTitle)
+                    .padding()
+                
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVGrid(columns: columns, spacing: 15) {
+                        ForEach(dataLoader.categories.flatMap { $0.wordlists }, id: \.title) { wordlist in
+                            Chip(title: wordlist.title, color: wordlist.swiftUIColor) {
+                                let words = deduplicate(array: wordlist.words)
+                                if let translation = proxy.transform(in: .immersiveSpace)?.translation {
+                                    if wordlist.sorted {
+                                        let newWordReelView = WordReelView(wordStrings: words, title: wordlist.title, color: wordlist.swiftUIColor, position: translation) { newCard in
+                                            appState.rootEntity.addChild(newCard.modelEntity)
+                                        }
+                                        appState.wordReelViews.append(newWordReelView)
+                                    } else {
+                                        // randomize
+                                        let newWordReelView = WordReelView(wordStrings: words.shuffled(), title: wordlist.title, color: wordlist.swiftUIColor, position: translation) { newCard in
+                                            appState.rootEntity.addChild(newCard.modelEntity)
+                                        }
+                                        appState.wordReelViews.append(newWordReelView)
+                                    }
                                 }
-                                appState.wordReelViews.append(newWordReelView)
-                            } else {
-                                // randomize
-                                let newWordReelView = WordReelView(wordStrings: words.shuffled(), title: wordlist.title, color: wordlist.swiftUIColor) { newCard in
-                                    appState.rootEntity.addChild(newCard.modelEntity)
-                                }
-                                appState.wordReelViews.append(newWordReelView)
+                                
+                                
                             }
                         }
                     }
+                    .padding(.horizontal)
                 }
                 .padding(.horizontal)
+                
+                Spacer()
             }
-            .padding(.horizontal)
-            
-            Spacer()
-        }
-        .task {
-            await openImmersiveSpace(id: "ImmersiveSpace")
-            appState.isImmersiveSpaceOpen = true
+            .task {
+                await openImmersiveSpace(id: "ImmersiveSpace")
+                appState.isImmersiveSpaceOpen = true
+            }
         }
     }
     
