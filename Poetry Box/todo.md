@@ -20,8 +20,8 @@
 Priorities
 - x Make main window appear right in front of user, as well as any selected boxes
 - x Redesign Plinth and WordCards
-- Option to hide boxes (put button next to title)
-- Option to close/collapse boxes (put button next to title)
+- x Option to hide boxes (put button next to title)
+- x Option to close/collapse boxes (put button next to title)
 - Add more words (especially verbs)
 - Fix corner radius on selection boxes
 - Make selection window prettier

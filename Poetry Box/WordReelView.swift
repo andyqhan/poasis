@@ -77,15 +77,13 @@ struct WordReelView: View {
             if let label = attachments.entity(for: "label") {
                 rootEntity.addChild(label)
                 label.position.z += 0.15
+                label.position.y -= 0.1
             }
             print("Finished init")
         } update: { content, attachments in
             if !isDragging { return }  // dirty hack to prevent this from running before init is done
-            print("Started update with dragOffset \(dragOffset), rootDragStart \(rootDragStart), rootEntity.position \(rootEntity.position)")
-            let convertedDrag = content.convert(dragOffset, from: .named("attachment"), to: .scene)
-            rootEntity.position = rootDragStart + convertedDrag
-            print("Finished update with convertedDrag \(convertedDrag), rootDragStart \(rootDragStart), rootEntity.position \(rootEntity.position)")
-//                rootEntity.lookAtCamera(worldInfo: appState.worldInfo)
+            let convertedDrag = content.convert(dragOffset, from: .local, to: .scene)
+            rootEntity.scenePosition = rootDragStart + convertedDrag
 
         } attachments: {
             Attachment(id: "label") {
@@ -121,26 +119,31 @@ struct WordReelView: View {
                     .padding(.vertical, 8)
                     .background(self.color)
                     .glassBackgroundEffect()
-                    .gesture(DragGesture()
-                        .onChanged { value in
-                            if !isDragging {
-                                isDragging = true
-                            }
-                            
-                            dragOffset = value.translation3D
-                            print("Got dragOffset", dragOffset)
-                        }
-                        .onEnded { value in
-                            isDragging = false
-                            rootDragStart = rootEntity.position
-                        }
-                    )
-                    .coordinateSpace(.named("attachment"))
+                    
                 }
             }
+        .gesture(DragGesture()
+            .targetedToEntity(plinthEntity)
+            .onChanged { value in
+                print("in drag gesture got value")
+                if !isDragging {
+                    isDragging = true
+                    rootDragStart = value.entity.scenePosition
+                }
+                
+                let translation3D = value.convert(value.gestureValue.translation3D, from: .local, to: .scene)
+
+                rootEntity.scenePosition = rootDragStart + translation3D
+                rootEntity.lookAtCamera(worldInfo: appState.worldInfo)
+            }
+            .onEnded { value in
+                isDragging = false
+                rootDragStart = .zero
+            }
+        )
         
         .gesture(DragGesture()
-                 //.targetedToEntity(wordReel.reelEntity)
+//                 .targetedToEntity(wordReel.reelEntity)
             .onChanged { value in
                 print("drag gesture on reel")
                 let dragDelta = value.translation.height - lastReelDragValue
@@ -166,6 +169,8 @@ struct WordReelView: View {
                 }
             }
         )
+        
+
     }
         
     static func == (l: WordReelView, r: WordReelView) -> Bool {
