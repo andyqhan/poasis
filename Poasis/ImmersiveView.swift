@@ -1,6 +1,5 @@
 //
 //  ImmersiveView.swift
-//  Poetry Box
 //
 //  Created by Andy Han on 4/20/24.
 //

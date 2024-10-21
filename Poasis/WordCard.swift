@@ -1,6 +1,5 @@
 //
 //  WordCard.swift
-//  Poetry Box
 //
 //  Created by Andy Han on 4/28/24.
 //

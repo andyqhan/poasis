@@ -9,12 +9,12 @@
 /* Begin PBXBuildFile section */
 		9253952A2BDEDA1400906D0F /* WordCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925395292BDEDA1400906D0F /* WordCard.swift */; };
 		9261962B2BD402C600CA2556 /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = 9261962A2BD402C600CA2556 /* RealityKitContent */; };
-		9261962D2BD402C600CA2556 /* Poetry_BoxApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9261962C2BD402C600CA2556 /* Poetry_BoxApp.swift */; };
+		9261962D2BD402C600CA2556 /* PoaisisApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9261962C2BD402C600CA2556 /* PoaisisApp.swift */; };
 		9261962F2BD402C600CA2556 /* CompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9261962E2BD402C600CA2556 /* CompositionView.swift */; };
 		926196312BD402C600CA2556 /* ImmersiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926196302BD402C600CA2556 /* ImmersiveView.swift */; };
 		926196332BD402C800CA2556 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 926196322BD402C800CA2556 /* Assets.xcassets */; };
 		926196362BD402C800CA2556 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 926196352BD402C800CA2556 /* Preview Assets.xcassets */; };
-		926196412BD402C800CA2556 /* Poetry_BoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926196402BD402C800CA2556 /* Poetry_BoxTests.swift */; };
+		926196412BD402C800CA2556 /* PoasisTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926196402BD402C800CA2556 /* PoasisTests.swift */; };
 		92807BB92C71229000695682 /* BoxSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92807BB82C71229000695682 /* BoxSelectionView.swift */; };
 		92807BBB2C712C8100695682 /* WordData.json in Resources */ = {isa = PBXBuildFile; fileRef = 92807BBA2C712C8100695682 /* WordData.json */; };
 		928F95B22C43F6460031B15A /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928F95B12C43F6460031B15A /* BoardView.swift */; };
@@ -37,16 +37,16 @@
 
 /* Begin PBXFileReference section */
 		925395292BDEDA1400906D0F /* WordCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordCard.swift; sourceTree = "<group>"; };
-		926196252BD402C600CA2556 /* Poetry Box.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Poetry Box.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		926196252BD402C600CA2556 /* Poasis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Poasis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		926196292BD402C600CA2556 /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
-		9261962C2BD402C600CA2556 /* Poetry_BoxApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poetry_BoxApp.swift; sourceTree = "<group>"; };
+		9261962C2BD402C600CA2556 /* PoaisisApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoaisisApp.swift; sourceTree = "<group>"; };
 		9261962E2BD402C600CA2556 /* CompositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionView.swift; sourceTree = "<group>"; };
 		926196302BD402C600CA2556 /* ImmersiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmersiveView.swift; sourceTree = "<group>"; };
 		926196322BD402C800CA2556 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		926196352BD402C800CA2556 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		926196372BD402C800CA2556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9261963C2BD402C800CA2556 /* Poetry BoxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Poetry BoxTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		926196402BD402C800CA2556 /* Poetry_BoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poetry_BoxTests.swift; sourceTree = "<group>"; };
+		9261963C2BD402C800CA2556 /* PoasisTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PoasisTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		926196402BD402C800CA2556 /* PoasisTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoasisTests.swift; sourceTree = "<group>"; };
 		92807BB82C71229000695682 /* BoxSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxSelectionView.swift; sourceTree = "<group>"; };
 		92807BBA2C712C8100695682 /* WordData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WordData.json; sourceTree = "<group>"; };
 		928423CB2C31FF24007635B6 /* todo.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = todo.md; sourceTree = "<group>"; };
@@ -80,9 +80,9 @@
 		9261961C2BD402C600CA2556 = {
 			isa = PBXGroup;
 			children = (
-				926196272BD402C600CA2556 /* Poetry Box */,
+				926196272BD402C600CA2556 /* Poasis */,
 				926196282BD402C600CA2556 /* Packages */,
-				9261963F2BD402C800CA2556 /* Poetry BoxTests */,
+				9261963F2BD402C800CA2556 /* PoasisTests */,
 				926196262BD402C600CA2556 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,16 +90,16 @@
 		926196262BD402C600CA2556 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				926196252BD402C600CA2556 /* Poetry Box.app */,
-				9261963C2BD402C800CA2556 /* Poetry BoxTests.xctest */,
+				926196252BD402C600CA2556 /* Poasis.app */,
+				9261963C2BD402C800CA2556 /* PoasisTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		926196272BD402C600CA2556 /* Poetry Box */ = {
+		926196272BD402C600CA2556 /* Poasis */ = {
 			isa = PBXGroup;
 			children = (
-				9261962C2BD402C600CA2556 /* Poetry_BoxApp.swift */,
+				9261962C2BD402C600CA2556 /* PoaisisApp.swift */,
 				9261962E2BD402C600CA2556 /* CompositionView.swift */,
 				928F95B52C44026B0031B15A /* AppConfig.swift */,
 				928F95B32C4400DC0031B15A /* CompositionView+Snapping.swift */,
@@ -116,7 +116,7 @@
 				92807BB82C71229000695682 /* BoxSelectionView.swift */,
 				92807BBA2C712C8100695682 /* WordData.json */,
 			);
-			path = "Poetry Box";
+			path = Poasis;
 			sourceTree = "<group>";
 		};
 		926196282BD402C600CA2556 /* Packages */ = {
@@ -135,20 +135,20 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		9261963F2BD402C800CA2556 /* Poetry BoxTests */ = {
+		9261963F2BD402C800CA2556 /* PoasisTests */ = {
 			isa = PBXGroup;
 			children = (
-				926196402BD402C800CA2556 /* Poetry_BoxTests.swift */,
+				926196402BD402C800CA2556 /* PoasisTests.swift */,
 			);
-			path = "Poetry BoxTests";
+			path = PoasisTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		926196242BD402C600CA2556 /* Poetry Box */ = {
+		926196242BD402C600CA2556 /* Poasis */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 926196442BD402C800CA2556 /* Build configuration list for PBXNativeTarget "Poetry Box" */;
+			buildConfigurationList = 926196442BD402C800CA2556 /* Build configuration list for PBXNativeTarget "Poasis" */;
 			buildPhases = (
 				926196212BD402C600CA2556 /* Sources */,
 				926196222BD402C600CA2556 /* Frameworks */,
@@ -158,17 +158,17 @@
 			);
 			dependencies = (
 			);
-			name = "Poetry Box";
+			name = Poasis;
 			packageProductDependencies = (
 				9261962A2BD402C600CA2556 /* RealityKitContent */,
 			);
 			productName = "Poetry Box";
-			productReference = 926196252BD402C600CA2556 /* Poetry Box.app */;
+			productReference = 926196252BD402C600CA2556 /* Poasis.app */;
 			productType = "com.apple.product-type.application";
 		};
-		9261963B2BD402C800CA2556 /* Poetry BoxTests */ = {
+		9261963B2BD402C800CA2556 /* PoasisTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 926196472BD402C800CA2556 /* Build configuration list for PBXNativeTarget "Poetry BoxTests" */;
+			buildConfigurationList = 926196472BD402C800CA2556 /* Build configuration list for PBXNativeTarget "PoasisTests" */;
 			buildPhases = (
 				926196382BD402C800CA2556 /* Sources */,
 				926196392BD402C800CA2556 /* Frameworks */,
@@ -179,9 +179,9 @@
 			dependencies = (
 				9261963E2BD402C800CA2556 /* PBXTargetDependency */,
 			);
-			name = "Poetry BoxTests";
+			name = PoasisTests;
 			productName = "Poetry BoxTests";
-			productReference = 9261963C2BD402C800CA2556 /* Poetry BoxTests.xctest */;
+			productReference = 9261963C2BD402C800CA2556 /* PoasisTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -203,7 +203,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 926196202BD402C600CA2556 /* Build configuration list for PBXProject "Poetry Box" */;
+			buildConfigurationList = 926196202BD402C600CA2556 /* Build configuration list for PBXProject "Poasis" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -216,8 +216,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				926196242BD402C600CA2556 /* Poetry Box */,
-				9261963B2BD402C800CA2556 /* Poetry BoxTests */,
+				926196242BD402C600CA2556 /* Poasis */,
+				9261963B2BD402C800CA2556 /* PoasisTests */,
 			);
 		};
 /* End PBXProject section */
@@ -254,7 +254,7 @@
 				92B4E95E2BF8F35400D8F203 /* WordReelView.swift in Sources */,
 				9261962F2BD402C600CA2556 /* CompositionView.swift in Sources */,
 				928F95B42C4400DC0031B15A /* CompositionView+Snapping.swift in Sources */,
-				9261962D2BD402C600CA2556 /* Poetry_BoxApp.swift in Sources */,
+				9261962D2BD402C600CA2556 /* PoaisisApp.swift in Sources */,
 				92B4E9602BF8F89200D8F203 /* WordReel.swift in Sources */,
 				926196312BD402C600CA2556 /* ImmersiveView.swift in Sources */,
 				9253952A2BDEDA1400906D0F /* WordCard.swift in Sources */,
@@ -265,7 +265,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				926196412BD402C800CA2556 /* Poetry_BoxTests.swift in Sources */,
+				926196412BD402C800CA2556 /* PoasisTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,7 +274,7 @@
 /* Begin PBXTargetDependency section */
 		9261963E2BD402C800CA2556 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 926196242BD402C600CA2556 /* Poetry Box */;
+			target = 926196242BD402C600CA2556 /* Poasis */;
 			targetProxy = 9261963D2BD402C800CA2556 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -467,7 +467,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Poetry Box.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Poetry Box";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Poasis.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Poasis";
 				XROS_DEPLOYMENT_TARGET = 1.1;
 			};
 			name = Debug;
@@ -488,7 +488,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Poetry Box.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Poetry Box";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Poasis.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Poasis";
 				XROS_DEPLOYMENT_TARGET = 1.1;
 			};
 			name = Release;
@@ -496,7 +496,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		926196202BD402C600CA2556 /* Build configuration list for PBXProject "Poetry Box" */ = {
+		926196202BD402C600CA2556 /* Build configuration list for PBXProject "Poasis" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				926196422BD402C800CA2556 /* Debug */,
@@ -505,7 +505,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		926196442BD402C800CA2556 /* Build configuration list for PBXNativeTarget "Poetry Box" */ = {
+		926196442BD402C800CA2556 /* Build configuration list for PBXNativeTarget "Poasis" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				926196452BD402C800CA2556 /* Debug */,
@@ -514,7 +514,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		926196472BD402C800CA2556 /* Build configuration list for PBXNativeTarget "Poetry BoxTests" */ = {
+		926196472BD402C800CA2556 /* Build configuration list for PBXNativeTarget "PoasisTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				926196482BD402C800CA2556 /* Debug */,

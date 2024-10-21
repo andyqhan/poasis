@@ -1,14 +1,11 @@
 //
-//  Poetry_BoxTests.swift
-//  Poetry BoxTests
-//
 //  Created by Andy Han on 4/20/24.
 //
 
 import XCTest
-@testable import Poetry_Box
+@testable import Poasis
 
-class Poetry_BoxTests: XCTestCase {
+class PoasisTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

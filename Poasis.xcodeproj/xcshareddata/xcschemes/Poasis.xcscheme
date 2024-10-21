@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "926196242BD402C600CA2556"
-               BuildableName = "Poetry Box.app"
-               BlueprintName = "Poetry Box"
-               ReferencedContainer = "container:Poetry Box.xcodeproj">
+               BuildableName = "Poasis.app"
+               BlueprintName = "Poasis"
+               ReferencedContainer = "container:Poasis.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,9 +36,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9261963B2BD402C800CA2556"
-               BuildableName = "Poetry BoxTests.xctest"
-               BlueprintName = "Poetry BoxTests"
-               ReferencedContainer = "container:Poetry Box.xcodeproj">
+               BuildableName = "PoasisTests.xctest"
+               BlueprintName = "PoasisTests"
+               ReferencedContainer = "container:Poasis.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -58,9 +58,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "926196242BD402C600CA2556"
-            BuildableName = "Poetry Box.app"
-            BlueprintName = "Poetry Box"
-            ReferencedContainer = "container:Poetry Box.xcodeproj">
+            BuildableName = "Poasis.app"
+            BlueprintName = "Poasis"
+            ReferencedContainer = "container:Poasis.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -82,9 +82,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "926196242BD402C600CA2556"
-            BuildableName = "Poetry Box.app"
-            BlueprintName = "Poetry Box"
-            ReferencedContainer = "container:Poetry Box.xcodeproj">
+            BuildableName = "Poasis.app"
+            BlueprintName = "Poasis"
+            ReferencedContainer = "container:Poasis.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

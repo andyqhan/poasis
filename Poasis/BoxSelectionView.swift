@@ -1,6 +1,5 @@
 //
 //  BoxSelectionView.swift
-//  Poetry Box
 //
 //  Created by Andy Han on 8/17/24.
 //

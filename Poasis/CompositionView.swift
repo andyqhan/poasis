@@ -1,6 +1,5 @@
 //
 //  ContentView.swift
-//  Poetry Box
 //
 //  The main view.
 //

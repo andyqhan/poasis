@@ -1,6 +1,5 @@
 //
 //  AppState.swift
-//  Poetry Box
 //
 //  Created by Andy Han on 8/13/24.
 //

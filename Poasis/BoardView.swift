@@ -1,6 +1,5 @@
 //
 //  BoardView.swift
-//  Poetry Box
 //
 //  Created by Andy Han on 7/14/24.
 //

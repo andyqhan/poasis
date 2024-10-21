@@ -1,6 +1,5 @@
 //
 //  WordReelView.swift
-//  Poetry Box
 //
 //  Created by Andy Han on 5/18/24.
 //

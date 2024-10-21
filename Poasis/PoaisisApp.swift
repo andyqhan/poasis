@@ -1,7 +1,4 @@
 //
-//  Poetry_BoxApp.swift
-//  Poetry Box
-//
 //  Created by Andy Han on 4/20/24.
 //
 
@@ -10,7 +7,7 @@ import RealityKitContent
 
 @main
 @MainActor
-struct Poetry_BoxApp: App {
+struct PoaisisApp: App {
     @State private var immersionStyle: ImmersionStyle = .mixed
     @State private var appState = AppState()
     @Environment(\.openImmersiveSpace) private var openImmersiveSpace
