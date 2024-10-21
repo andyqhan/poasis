@@ -8,7 +8,8 @@ import Foundation
 import SwiftUI
 import RealityKit
 
-struct WordList: Codable {
+struct WordList: Codable, Identifiable {
+    var id: String { title }
     let title: String
     let color: String
     let words: [String]
@@ -41,7 +42,8 @@ struct WordList: Codable {
     }
 }
 
-struct Category: Codable {
+struct Category: Codable, Identifiable {
+    var id = UUID()
     let category: String
     let wordlists: [WordList]
 }
@@ -66,39 +68,6 @@ class DataLoader: ObservableObject {
     }
 }
 
-
-struct Chip: View {
-    let title: String
-    let color: Color
-    let action: () -> Void
-    
-    var body: some View {
-        Button (action: {
-            action()
-        }) {
-            VStack {
-                HStack {
-                    Text(title)
-                        .font(.headline)
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding([.top, .leading], 10)
-                    Spacer()
-                }
-                
-                Spacer()
-            }
-           
-        }
-        .buttonStyle(PlainButtonStyle())
-        .frame(width: 150, height: 100)
-        .background(color)
-        .cornerRadius(10)
-
-        
-    }
-}
-
 struct BoxSelectionView: View {
     @ObservedObject var dataLoader = DataLoader()
     @Environment(AppState.self) private var appState
@@ -114,46 +83,49 @@ struct BoxSelectionView: View {
     var body: some View {
         GeometryReader3D { proxy in
             VStack {
-
-                Text("Pick a box!")
+                Spacer()
+                Text("Poasis")
                     .font(.largeTitle)
                     .padding()
                 
                 ScrollView(.vertical, showsIndicators: false) {
-                    LazyVGrid(columns: columns, spacing: 15) {
-                        ForEach(dataLoader.categories.flatMap { $0.wordlists }, id: \.title) { wordlist in
-                            Chip(title: wordlist.title, color: wordlist.swiftUIColor) {
-                                let words = deduplicate(array: wordlist.words)
-                                if let translation = proxy.transform(in: .immersiveSpace)?.translation {
-                                    if wordlist.sorted {
-                                        let newWordReelView = WordReelView(wordStrings: words, title: wordlist.title, color: wordlist.swiftUIColor, position: translation) { newCard in
-                                            appState.rootEntity.addChild(newCard.modelEntity)
-                                        }
-                                        appState.wordReelViews.append(newWordReelView)
-                                    } else {
-                                        // randomize
-                                        let newWordReelView = WordReelView(wordStrings: words.shuffled(), title: wordlist.title, color: wordlist.swiftUIColor, position: translation) { newCard in
-                                            appState.rootEntity.addChild(newCard.modelEntity)
-                                        }
-                                        appState.wordReelViews.append(newWordReelView)
-                                    }
-                                }
-                                
-                                
+                    ForEach(dataLoader.categories) { category in
+                        ForEach(category.wordlists) { wordlist in
+                            Chip(category: category, wordlist: wordlist) {
+                                print("action")
                             }
                         }
                     }
-                    .padding(.horizontal)
-                }
-                .padding(.horizontal)
-                
-                Spacer()
+//                        ForEach(dataLoader.categories.flatMap { $0.wordlists }, id: \.title) { wordlist in
+//                            Chip(title: wordlist.title, color: wordlist.swiftUIColor) {
+//                                let words = deduplicate(array: wordlist.words)
+//                                if let translation = proxy.transform(in: .immersiveSpace)?.translation {
+//                                    if wordlist.sorted {
+//                                        let newWordReelView = WordReelView(wordStrings: words, title: wordlist.title, color: wordlist.swiftUIColor, position: translation) { newCard in
+//                                            appState.rootEntity.addChild(newCard.modelEntity)
+//                                        }
+//                                        appState.wordReelViews.append(newWordReelView)
+//                                    } else {
+//                                        // randomize
+//                                        let newWordReelView = WordReelView(wordStrings: words.shuffled(), title: wordlist.title, color: wordlist.swiftUIColor, position: translation) { newCard in
+//                                            appState.rootEntity.addChild(newCard.modelEntity)
+//                                        }
+//                                        appState.wordReelViews.append(newWordReelView)
+//                                    }
+//                                }
+//                            }
+//                        }
+                    }
+                    .frame(maxWidth: .infinity) // Ensures it takes as much space as needed
+                    .fixedSize(horizontal: true, vertical: false)
             }
             .task {
                 await openImmersiveSpace(id: "ImmersiveSpace")
                 appState.isImmersiveSpaceOpen = true
             }
         }
+        .padding()
+        .glassBackgroundEffect()
     }
     
     private func calculateGridWidth() -> CGFloat {
@@ -181,4 +153,6 @@ struct BoxSelectionView: View {
 #Preview {
     BoxSelectionView()
         .environment(AppState())
+        .frame(minWidth: 200, maxWidth: .infinity) // Sets the frame to a minimum and maximum
+        .fixedSize(horizontal: true, vertical: false)
 }
