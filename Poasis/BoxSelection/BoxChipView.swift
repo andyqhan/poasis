@@ -20,108 +20,77 @@ struct ContentHeightPreferenceKey: PreferenceKey {
 
 struct InfiniteVerticalScrollView: View {
     let strings: [String]
-    @State private var offsetY: CGFloat = 0
+    let width: CGFloat
+    let bgColor: Color
+    @State private var offset: CGFloat = 0
     @State private var contentHeight: CGFloat = 0
-
+    private let scrollSpeed: Double = 50
+    private let fadeHeight: CGFloat = 20  // Height of fade effect
+    
+    private let timer = Timer.publish(every: 1/60, on: .main, in: .common).autoconnect()
+    
     var body: some View {
-        VStack(spacing: 0) {
-            content
-        }
-        .offset(y: offsetY)
-        .onAppear {
-            // Start the animation after the content height is measured
-            if contentHeight > 0 {
-                startAnimation()
+        GeometryReader { geometry in
+            ZStack(alignment: .top) {
+                // Main scrolling content
+                VStack(spacing: 6) {
+                    ForEach(strings, id: \.self) { string in
+                        Text(string)
+                            .padding(.vertical, 5)
+                            .frame(width: width, alignment: .center)
+                            .lineLimit(1)
+                    }
+                    
+                    ForEach(strings, id: \.self) { string in
+                        Text(string)
+                            .padding(.vertical, 5)
+                            .frame(width: width, alignment: .center)
+                            .lineLimit(1)
+                    }
+                }
+                .background(
+                    GeometryReader { contentGeometry in
+                        Color.clear.onAppear {
+                            contentHeight = contentGeometry.size.height / 2
+                        }
+                    }
+                )
+                .offset(y: offset)
+                .onReceive(timer) { _ in
+                    offset -= scrollSpeed / 60
+                    if -offset >= contentHeight {
+                        offset = 0
+                    }
+                }
+                
+                // Top fade gradient
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        bgColor,
+                        bgColor.opacity(0)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: fadeHeight)
+                
+                // Bottom fade gradient
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        bgColor.opacity(0),
+                        bgColor
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: fadeHeight)
+                .position(x: geometry.size.width / 2, y: geometry.size.height - fadeHeight / 2)
             }
         }
-        .onChange(of: contentHeight) { _, _ in
-            // Restart the animation if the content height changes
-            if contentHeight > 0 {
-                startAnimation()
-            }
-        }
-    }
-
-    var content: some View {
-        VStack(spacing: 0) {
-            ForEach(strings.indices, id: \.self) { index in
-                Text(strings[index])
-                    .frame(maxWidth: .infinity)
-            }
-        }
-        .background(
-            GeometryReader { geometry in
-                Color.clear.preference(key: ContentHeightPreferenceKey.self, value: geometry.size.height)
-            }
-        )
-        .onPreferenceChange(ContentHeightPreferenceKey.self) { value in
-            contentHeight = value
-        }
-    }
-
-    func startAnimation() {
-        // Reset offset to 0 before starting the animation
-        offsetY = 0
-        let animation = Animation.linear(duration: Double(contentHeight) / 50) // Adjust speed by changing the divisor
-            .repeatForever(autoreverses: true)
-        withAnimation(animation) {
-            offsetY = -contentHeight
-        }
+        .frame(width: width)
+        .clipped()
     }
 }
-
-//struct ScrollingWordsView: View {
-//    let words: [String]
-//    @State private var scrollOffset: CGFloat = 0
-//    @State private var timer: Timer? = nil
-//    
-//    var loopedWords: [String] {
-//        words + words
-//    }
-//    
-//    var body: some View {
-//        GeometryReader { geometry in
-//            ScrollView(.vertical, showsIndicators: false) {
-//                VStack(spacing: 10) {
-//                    ForEach(loopedWords, id: \.self) { word in
-//                        Text(word)
-//                            .font(.body)
-//                    }
-//                }
-//                .padding()
-//                .offset(y: scrollOffset)
-//                .onAppear {
-//                    // Start the scrolling animation when the view appears
-//                    startScrolling(wordCount: words.count)
-//                }
-//                .onDisappear {
-//                    // Stop the timer when the view disappears
-//                    stopScrolling()
-//                }
-//            }
-//        }
-//        .frame(height: 50) // Adjust frame height as needed
-//    }
-//    
-//    // Method to start the scrolling animation
-//    func startScrolling(wordCount: Int) {
-//        let totalContentHeight = wordCount * (15 + 10)
-//        timer = Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { _ in
-//            withAnimation(.linear(duration: 0.2)) {
-//                scrollOffset -= 1 // Adjust scrolling speed here
-//                if Int(scrollOffset) < -totalContentHeight {
-//                    scrollOffset = 0 // Reset offset to create a continuous scroll
-//                }
-//            }
-//        }
-//    }
-//    
-//    // Method to stop the scrolling when the view disappears
-//    func stopScrolling() {
-//        timer?.invalidate()
-//        timer = nil
-//    }
-//}
 
 
 struct ChevronShape: Shape {
@@ -129,23 +98,65 @@ struct ChevronShape: Shape {
         var path = Path()
         
         // Start at the top-left of the rect
-        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
-        
-        // Inverted curve from top-left to middle-right (convex side up)
+        path.move(to: CGPoint(x: rect.minX - 5, y: rect.minY - 5))
         
         let xControl = rect.midX * 0.7
         let yOffset = rect.midY * 0.3
-
+        
         let topControl = CGPoint(x: xControl, y: rect.midY - yOffset)
         let botControl = CGPoint(x: xControl, y: rect.midY + yOffset)
         
-        path.addCurve(to: CGPoint(x: rect.maxX, y: rect.midY), control1: topControl, control2: topControl)
+        // Create a continuous path that forms the chevron
+        path.addCurve(
+            to: CGPoint(x: rect.maxX, y: rect.midY),
+            control1: topControl,
+            control2: topControl
+        )
         
-        path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
+        // Continue the path downward, no need to move
+        path.addCurve(
+            to: CGPoint(x: rect.minX - 5, y: rect.maxY + 5),
+            control1: botControl,
+            control2: botControl
+        )
         
-        path.addCurve(to: CGPoint(x: rect.maxX, y: rect.midY), control1: botControl, control2: botControl)
-
         return path
+    }
+}
+
+extension Color {
+    /// Creates a darker version of the color by reducing its brightness
+    /// - Parameter percentage: Amount to darken the color by (0-100)
+    /// - Returns: A new Color that's darker than the original
+    func darker(by percentage: Double = 30) -> Color {
+        guard percentage > 0, percentage <= 100 else {
+            return self
+        }
+        
+        // Convert Color to UIColor for color space manipulation
+        let uiColor = UIColor(self)
+        var hue: CGFloat = 0
+        var saturation: CGFloat = 0
+        var brightness: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        // Get the HSB values from the color
+        uiColor.getHue(&hue,
+                      saturation: &saturation,
+                      brightness: &brightness,
+                      alpha: &alpha)
+        
+        // Reduce brightness by the specified percentage
+        let newBrightness = max(0, brightness * (1 - percentage/100))
+        
+        // Create new UIColor with adjusted brightness
+        let darkerColor = UIColor(hue: hue,
+                                saturation: saturation,
+                                brightness: newBrightness,
+                                alpha: alpha)
+        
+        // Convert back to SwiftUI Color
+        return Color(uiColor: darkerColor)
     }
 }
 
@@ -156,56 +167,60 @@ struct Chip: View {
     
     var emoji: String {
         switch category.category {
+        case "nouns":
+            return "📦"
+        case "verbs":
+            return ""
+        case "utilities":
+            return "🔧"
         default:
             return "📦"
         }
     }
     
     var body: some View {
-        Button (action: {
+        Button(action: {
             action()
         }) {
-            HStack {
+            HStack(spacing: 0) {  // Set spacing to 0 for precise control
                 Spacer()
+                    .frame(width: 20)  // Adjust left padding as needed
                 
-                // emoji
                 Text(emoji)
                     .font(.system(size: 50))
                 
-                // chevron shape
                 GeometryReader { geometry in
                     ChevronShape()
-                        .stroke(Color.black, lineWidth: 2) // Change color and line width as needed
+                        .stroke(wordlist.swiftUIColor.darker(), lineWidth: 5)
                         .frame(width: geometry.size.width * 0.75, height: geometry.size.height)
                 }
-                .frame(width: 30) // Adjust size of chevron as needed
+                .frame(width: 30)
                 
-                // title
                 Text(wordlist.title)
                     .font(.headline)
                     .multilineTextAlignment(.leading)
                 
-                // chevron shape
                 GeometryReader { geometry in
                     ChevronShape()
-                        .stroke(Color.black, lineWidth: 2) // Change color and line width as needed
+                        .stroke(wordlist.swiftUIColor.darker(), lineWidth: 5)
                         .frame(width: geometry.size.width * 0.75, height: geometry.size.height)
                 }
-                .frame(width: 30) // Adjust size of chevron as needed
+                .frame(width: 30)
                 
-                // scrolling thing
-                InfiniteVerticalScrollView(strings: wordlist.words)
+                // Use GeometryReader to calculate remaining space
+                GeometryReader { geometry in
+                    InfiniteVerticalScrollView(strings: wordlist.words, width: geometry.size.width, bgColor: wordlist.swiftUIColor)
+                        .frame(width: geometry.size.width)
+                }
+                
                 Spacer()
-                    .frame(maxWidth: .infinity)
+                    .frame(width: 20)  // Adjust right padding as needed
             }
-                
         }
         .buttonStyle(PlainButtonStyle())
         .frame(width: 400, height: 100)
         .background(wordlist.swiftUIColor)
         .cornerRadius(10)
-
-        
     }
 }
 

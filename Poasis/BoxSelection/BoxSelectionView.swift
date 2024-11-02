@@ -46,6 +46,11 @@ struct Category: Codable, Identifiable {
     var id = UUID()
     let category: String
     let wordlists: [WordList]
+    
+    private enum CodingKeys: CodingKey {
+        case category
+        case wordlists
+    }
 }
 
 class DataLoader: ObservableObject {
@@ -89,41 +94,30 @@ struct BoxSelectionView: View {
                     .padding()
                 
                 ScrollView(.vertical, showsIndicators: false) {
-                    ForEach(dataLoader.categories) { category in
-                        ForEach(category.wordlists) { wordlist in
-                            Chip(category: category, wordlist: wordlist) {
-                                print("action")
+                    VStack(spacing: 10) {
+                        ForEach(dataLoader.categories) { category in
+                            ForEach(category.wordlists) { wordlist in
+                                Chip(category: category, wordlist: wordlist) {
+                                    print("action")
+                                    let words = deduplicate(array: wordlist.words)
+                                    if let translation = proxy.transform(in: .immersiveSpace)?.translation {
+                                        let newWordReelView = WordReelView(wordStrings: wordlist.sorted ? words : words.shuffled(), title: wordlist.title, color: wordlist.swiftUIColor, position: translation) { newCard in
+                                            appState.rootEntity.addChild(newCard.modelEntity)
+                                        }
+                                        appState.wordReelViews.append(newWordReelView)
+                                    }
+                                }
                             }
                         }
                     }
-//                        ForEach(dataLoader.categories.flatMap { $0.wordlists }, id: \.title) { wordlist in
-//                            Chip(title: wordlist.title, color: wordlist.swiftUIColor) {
-//                                let words = deduplicate(array: wordlist.words)
-//                                if let translation = proxy.transform(in: .immersiveSpace)?.translation {
-//                                    if wordlist.sorted {
-//                                        let newWordReelView = WordReelView(wordStrings: words, title: wordlist.title, color: wordlist.swiftUIColor, position: translation) { newCard in
-//                                            appState.rootEntity.addChild(newCard.modelEntity)
-//                                        }
-//                                        appState.wordReelViews.append(newWordReelView)
-//                                    } else {
-//                                        // randomize
-//                                        let newWordReelView = WordReelView(wordStrings: words.shuffled(), title: wordlist.title, color: wordlist.swiftUIColor, position: translation) { newCard in
-//                                            appState.rootEntity.addChild(newCard.modelEntity)
-//                                        }
-//                                        appState.wordReelViews.append(newWordReelView)
-//                                    }
-//                                }
-//                            }
-//                        }
-                    }
-                    .frame(maxWidth: .infinity) // Ensures it takes as much space as needed
-                    .fixedSize(horizontal: true, vertical: false)
+                }
             }
             .task {
                 await openImmersiveSpace(id: "ImmersiveSpace")
                 appState.isImmersiveSpaceOpen = true
             }
         }
+        .frame(width: 400)  // the Chips are width 400
         .padding()
         .glassBackgroundEffect()
     }
@@ -154,5 +148,4 @@ struct BoxSelectionView: View {
     BoxSelectionView()
         .environment(AppState())
         .frame(minWidth: 200, maxWidth: .infinity) // Sets the frame to a minimum and maximum
-        .fixedSize(horizontal: true, vertical: false)
 }
