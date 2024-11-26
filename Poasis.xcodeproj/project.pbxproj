@@ -24,6 +24,7 @@
 		92B4E9602BF8F89200D8F203 /* WordReel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B4E95F2BF8F89200D8F203 /* WordReel.swift */; };
 		92BD46B42CC6E2B800FDBFE0 /* BoxChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD46B32CC6E2B800FDBFE0 /* BoxChipView.swift */; };
 		92D9B3832C6C22B2003FF119 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D9B3822C6C22B2003FF119 /* AppState.swift */; };
+		92EFE7342CF547BA00E4D034 /* pf_wordlist.json in Resources */ = {isa = PBXBuildFile; fileRef = 92EFE7332CF547BA00E4D034 /* pf_wordlist.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		92B4E95F2BF8F89200D8F203 /* WordReel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordReel.swift; sourceTree = "<group>"; };
 		92BD46B32CC6E2B800FDBFE0 /* BoxChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxChipView.swift; sourceTree = "<group>"; };
 		92D9B3822C6C22B2003FF119 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		92EFE7332CF547BA00E4D034 /* pf_wordlist.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = pf_wordlist.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 				926196372BD402C800CA2556 /* Info.plist */,
 				926196342BD402C800CA2556 /* Preview Content */,
 				925395292BDEDA1400906D0F /* WordCard.swift */,
+				92EFE7332CF547BA00E4D034 /* pf_wordlist.json */,
 				928423CB2C31FF24007635B6 /* todo.md */,
 				92D9B3822C6C22B2003FF119 /* AppState.swift */,
 				92807BBA2C712C8100695682 /* WordData.json */,
@@ -239,6 +242,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				926196362BD402C800CA2556 /* Preview Assets.xcassets in Resources */,
+				92EFE7342CF547BA00E4D034 /* pf_wordlist.json in Resources */,
 				92807BBB2C712C8100695682 /* WordData.json in Resources */,
 				926196332BD402C800CA2556 /* Assets.xcassets in Resources */,
 			);

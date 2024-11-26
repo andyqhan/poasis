@@ -161,12 +161,11 @@ extension Color {
 }
 
 struct Chip: View {
-    let category: Category
     let wordlist: WordList
     let action: () -> Void
     
     var emoji: String {
-        switch category.category {
+        switch wordlist.category {
         case "nouns":
             return "📦"
         case "verbs":
@@ -196,7 +195,7 @@ struct Chip: View {
                 }
                 .frame(width: 30)
                 
-                Text(wordlist.title)
+                Text(wordlist.name)
                     .font(.headline)
                     .multilineTextAlignment(.leading)
                 
@@ -220,15 +219,14 @@ struct Chip: View {
         .buttonStyle(PlainButtonStyle())
         .frame(width: 400, height: 100)
         .background(wordlist.swiftUIColor)
-        .cornerRadius(10)
+        .cornerRadius(40)
     }
 }
 
 #Preview {
-    let wordlist = WordList(title: "Test wordlist", color: "blue", words: "oh might those sighs and tears return again into my brest and eyes which i have spent".split(separator: " ").map(String.init), sorted: false)
-    let category = Category(category: "Test category", wordlists: [wordlist])
+    let wordlist = WordList(category: "test category", name: "Test wordlist", color: "blue", words: "oh might those sighs and tears return again into my breast and eyes which i have spent".split(separator: " ").map(String.init), sorted: false)
     
-    return Chip(category: category, wordlist: wordlist) {
+    Chip(wordlist: wordlist) {
         print("action")
         return
     }

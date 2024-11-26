@@ -9,36 +9,24 @@ import SwiftUI
 import RealityKit
 
 struct WordList: Codable, Identifiable {
-    var id: String { title }
-    let title: String
-    let color: String
+    var id: String { name }
+    let category: String
+    let name: String
+    let color: String  // hex color code
     let words: [String]
     let sorted: Bool
     
     var swiftUIColor: Color {
-        switch color.lowercased() {
-        case "red":
-            return .red
-        case "green":
-            return .green
-        case "blue":
-            return .blue
-        case "orange":
-            return .orange
-        case "purple":
-            return .purple
-        case "pink":
-            return .pink
-        case "yellow":
-            return .yellow
-        case "gray":
-            return .gray
-        case "brown":
-            return .brown
-        default:
-            print("Couldn't find color for: \(color)")
-            return .gray // Fallback color
+        // Remove the '#' if present
+        let hexString = color.hasPrefix("#") ? String(color.dropFirst()) : color
+        // Convert hex to integer
+        guard let hexInt = UInt32(hexString, radix: 16) else {
+            return .gray // Default color in case of invalid hex
         }
+        let red = Double((hexInt & 0xFF0000) >> 16) / 255.0
+        let green = Double((hexInt & 0x00FF00) >> 8) / 255.0
+        let blue = Double(hexInt & 0x0000FF) / 255.0
+        return Color(red: red, green: green, blue: blue)
     }
 }
 
@@ -54,18 +42,18 @@ struct Category: Codable, Identifiable {
 }
 
 class DataLoader: ObservableObject {
-    @Published var categories: [Category] = []
+    @Published var wordlists: [WordList] = []
     
     init() {
         load()
     }
     
     func load() {
-        if let url = Bundle.main.url(forResource: "WordData", withExtension: "json") {
+        if let url = Bundle.main.url(forResource: "pf_wordlist", withExtension: "json") {
             do {
                 let data = try Data(contentsOf: url)
                 let decoder = JSONDecoder()
-                categories = try decoder.decode([Category].self, from: data)
+                wordlists = try decoder.decode([WordList].self, from: data)
             } catch {
                 print("Error loading JSON: \(error)")
             }
@@ -95,21 +83,20 @@ struct BoxSelectionView: View {
                 
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 10) {
-                        ForEach(dataLoader.categories) { category in
-                            ForEach(category.wordlists) { wordlist in
-                                Chip(category: category, wordlist: wordlist) {
-                                    print("action")
-                                    let words = deduplicate(array: wordlist.words)
-                                    if let translation = proxy.transform(in: .immersiveSpace)?.translation {
-                                        let newWordReelView = WordReelView(wordStrings: wordlist.sorted ? words : words.shuffled(), title: wordlist.title, color: wordlist.swiftUIColor, position: translation) { newCard in
-                                            appState.rootEntity.addChild(newCard.modelEntity)
-                                        }
-                                        appState.wordReelViews.append(newWordReelView)
+                        ForEach(dataLoader.wordlists) { wordlist in
+                            Chip(wordlist: wordlist) {
+                                print("action")
+                                let words = deduplicate(array: wordlist.words)
+                                if let translation = proxy.transform(in: .immersiveSpace)?.translation {
+                                    let newWordReelView = WordReelView(wordStrings: wordlist.sorted ? words : words.shuffled(), title: wordlist.name, color: wordlist.swiftUIColor, position: translation) { newCard in
+                                        appState.rootEntity.addChild(newCard.modelEntity)
                                     }
+                                    appState.wordReelViews.append(newWordReelView)
                                 }
                             }
                         }
                     }
+                    
                 }
             }
             .task {
