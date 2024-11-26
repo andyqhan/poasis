@@ -163,6 +163,20 @@ extension Color {
 struct Chip: View {
     let wordlist: WordList
     let action: () -> Void
+    @State private var isExpanded = false
+    @State private var selectedOption = 0
+    @GestureState private var translation: CGFloat = 0
+    
+    private let buttonWidth: CGFloat = 120
+    private let buttonHeight: CGFloat = 70
+    
+    var options: [String] {
+        if wordlist.sorted {
+            return ["Top 100", "Random 100", "All"]
+        } else {
+            return ["Random 100", "All"]
+        }
+    }
     
     var emoji: String {
         switch wordlist.category {
@@ -178,53 +192,136 @@ struct Chip: View {
     }
     
     var body: some View {
-        Button(action: {
-            action()
-        }) {
-            HStack(spacing: 0) {  // Set spacing to 0 for precise control
-                Spacer()
-                    .frame(width: 20)  // Adjust left padding as needed
-                
-                Text(emoji)
-                    .font(.system(size: 50))
-                
-                GeometryReader { geometry in
-                    ChevronShape()
-                        .stroke(wordlist.swiftUIColor.darker(), lineWidth: 5)
-                        .frame(width: geometry.size.width * 0.75, height: geometry.size.height)
+        Group {
+            if isExpanded {
+                HStack(spacing: 8) {
+                    // Title section
+                    HStack(spacing: 4) {
+                        Text(emoji)
+                            .font(.system(size: 30))
+                        Text(wordlist.name)
+                            .font(.headline)
+                    }
+                    .padding(.leading, 20)
+                    
+                    Spacer()
+                    
+                    // Swipeable button section
+                    ZStack(alignment: .leading) {
+                        Button(action: {
+                            // TODO
+                            action()
+                        }) {
+                            Text(options[selectedOption])
+                                .foregroundColor(.white)
+                                .frame(width: buttonWidth, height: buttonHeight)
+                                .contentShape(Rectangle())
+                        }
+                        .offset(x: translation)
+                        .clipped()
+                    }
+                    .gesture(
+                        DragGesture()
+                            .updating($translation) { value, state, _ in
+                                state = value.translation.width
+                            }
+                            .onEnded { value in
+                                let threshold: CGFloat = 50
+                                if value.translation.width > threshold {
+                                    selectedOption = max(0, selectedOption - 1)
+                                } else if value.translation.width < -threshold {
+                                    selectedOption = min(options.count - 1, selectedOption + 1)
+                                }
+                            }
+                    )
+                    .overlay(
+                        HStack(spacing: 4) {
+                            ForEach(0..<options.count, id: \.self) { index in
+                                Circle()
+                                    .fill(selectedOption == index ? Color.white : Color.white.opacity(0.5))
+                                    .frame(width: 6, height: 6)
+                            }
+                        }
+                        .padding(.bottom, 4),
+                        alignment: .bottom
+                    )
+                    .padding(.trailing, 20)
+                    
+                    Spacer()
                 }
-                .frame(width: 30)
-                
-                Text(wordlist.name)
-                    .font(.headline)
-                    .multilineTextAlignment(.leading)
-                
-                GeometryReader { geometry in
-                    ChevronShape()
-                        .stroke(wordlist.swiftUIColor.darker(), lineWidth: 5)
-                        .frame(width: geometry.size.width * 0.75, height: geometry.size.height)
+            } else {
+                HStack(spacing: 0) {
+                    Spacer()
+                        .frame(width: 20)
+                    
+                    Text(emoji)
+                        .font(.system(size: 50))
+                    
+                    GeometryReader { geometry in
+                        ChevronShape()
+                            .stroke(wordlist.swiftUIColor.darker(), lineWidth: 5)
+                            .frame(width: geometry.size.width * 0.75, height: geometry.size.height)
+                    }
+                    .frame(width: 30)
+                    
+                    Text(wordlist.name)
+                        .font(.headline)
+                        .multilineTextAlignment(.leading)
+                    
+                    GeometryReader { geometry in
+                        ChevronShape()
+                            .stroke(wordlist.swiftUIColor.darker(), lineWidth: 5)
+                            .frame(width: geometry.size.width * 0.75, height: geometry.size.height)
+                    }
+                    .frame(width: 30)
+                    
+                    GeometryReader { geometry in
+                        InfiniteVerticalScrollView(strings: wordlist.words, width: geometry.size.width, bgColor: wordlist.swiftUIColor)
+                            .frame(width: geometry.size.width)
+                    }
+                    
+                    Spacer()
+                        .frame(width: 20)
                 }
-                .frame(width: 30)
-                
-                // Use GeometryReader to calculate remaining space
-                GeometryReader { geometry in
-                    InfiniteVerticalScrollView(strings: wordlist.words, width: geometry.size.width, bgColor: wordlist.swiftUIColor)
-                        .frame(width: geometry.size.width)
-                }
-                
-                Spacer()
-                    .frame(width: 20)  // Adjust right padding as needed
             }
         }
-        .buttonStyle(PlainButtonStyle())
         .frame(width: 400, height: 100)
         .background(wordlist.swiftUIColor)
         .cornerRadius(40)
+        .onTapGesture {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                isExpanded.toggle()
+            }
+        }
+    }
+}
+
+// Custom button style for the action buttons
+struct ChipActionButtonStyle: ButtonStyle {
+    let color: Color
+    
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(color.darker())
+            .foregroundColor(.white)
+            .cornerRadius(20)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+            .frame(maxWidth: .infinity)  // Make the button fill its container
+            .minimumScaleFactor(0.8)  // Allow text to scale down if needed
+    }
+}
+
+// Extension to make buttons more compact
+extension Button {
+    func chipStyle(color: Color) -> some View {
+        self.buttonStyle(ChipActionButtonStyle(color: color))
     }
 }
 
 #Preview {
-    let wordlist = WordList(category: "test category", name: "Test wordlist", color: "blue", words: "oh might those sighs and tears return again into my breast and eyes which i have spent".split(separator: " ").map(String.init), sorted: false)
+    let wordlist = WordList(category: "test category", name: "Test wordlist", color: "blue", words: "oh might those sighs and tears return again into my breast and eyes which i have spent".split(separator: " ").map(String.init), sorted: true)
     
     Chip(wordlist: wordlist) {
         print("action")
