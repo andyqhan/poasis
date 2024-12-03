@@ -45,19 +45,42 @@ class DataLoader: ObservableObject {
     @Published var wordlists: [WordList] = []
     
     init() {
-        load()
+        // Since we can't make init async directly, we trigger the async load
+        Task {
+            await loadAll()
+        }
     }
     
-    func load() {
-        if let url = Bundle.main.url(forResource: "pf_wordlist", withExtension: "json") {
-            do {
-                let data = try Data(contentsOf: url)
-                let decoder = JSONDecoder()
-                wordlists = try decoder.decode([WordList].self, from: data)
-            } catch {
-                print("Error loading JSON: \(error)")
+    private func loadAll() async {
+        // Load both files concurrently
+        async let list1 = load(name: "pf_wordlist")
+        async let list2 = load(name: "gut_wordlist")
+        
+        // Wait for both loads to complete and handle any errors
+        do {
+            let (pfList, gutList) = try await (list1, list2)
+            // Update UI on main thread since we're modifying @Published property
+            await MainActor.run {
+                wordlists.append(contentsOf: pfList)
+                wordlists.append(contentsOf: gutList)
             }
+        } catch {
+            print("Error loading JSON: \(error)")
         }
+    }
+    
+    private func load(name: String) async throws -> [WordList] {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "json") else {
+            throw LoadError.fileNotFound
+        }
+        
+        let data = try Data(contentsOf: url)
+        let decoder = JSONDecoder()
+        return try decoder.decode([WordList].self, from: data)
+    }
+    
+    enum LoadError: Error {
+        case fileNotFound
     }
 }
 

@@ -178,6 +178,16 @@ struct Chip: View {
         }
     }
     
+    var randomWords: [String] {
+        // we just pick 100 to scroll through because all of them is often slow
+        // TODO: probably be best to use a generator for this in InfiniteScrollView
+        var res: [String] = []
+        for _ in 0...99 {
+            res.append(wordlist.words.randomElement()!)
+        }
+        return res
+    }
+    
     var emoji: String {
         switch wordlist.category {
         case "nouns":
@@ -201,39 +211,51 @@ struct Chip: View {
                             .font(.system(size: 30))
                         Text(wordlist.name)
                             .font(.headline)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.leading, 20)
+                    .frame(width: 150)
                     
                     Spacer()
                     
-                    // Swipeable button section
-                    ZStack(alignment: .leading) {
+                    // Button section with arrows
+                    HStack(spacing: 10) {
+                        // Left arrow button
                         Button(action: {
-                            // TODO
+                            selectedOption = max(0, selectedOption - 1)
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .foregroundColor(.white)
+                                .frame(width: 44, height: 44)
+                                .background(Circle().fill(Color.gray.opacity(0.3)))
+                        }
+                        .frame(width: buttonWidth/3, height: buttonHeight)
+                        .disabled(selectedOption == 0)
+                        
+                        // Main button
+                        Button(action: {
                             action()
                         }) {
                             Text(options[selectedOption])
                                 .foregroundColor(.white)
                                 .frame(width: buttonWidth, height: buttonHeight)
+                                .lineLimit(2)
                                 .contentShape(Rectangle())
                         }
-                        .offset(x: translation)
-                        .clipped()
+                        
+                        // Right arrow button
+                        Button(action: {
+                            selectedOption = min(options.count - 1, selectedOption + 1)
+                        }) {
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.white)
+                                .frame(width: 30, height: 44)
+                                .background(Circle().fill(Color.gray.opacity(0.3)))
+                        }
+                        .frame(width: buttonWidth/3, height: buttonHeight)
+                        .disabled(selectedOption == options.count - 1)
                     }
-                    .gesture(
-                        DragGesture()
-                            .updating($translation) { value, state, _ in
-                                state = value.translation.width
-                            }
-                            .onEnded { value in
-                                let threshold: CGFloat = 50
-                                if value.translation.width > threshold {
-                                    selectedOption = max(0, selectedOption - 1)
-                                } else if value.translation.width < -threshold {
-                                    selectedOption = min(options.count - 1, selectedOption + 1)
-                                }
-                            }
-                    )
                     .overlay(
                         HStack(spacing: 4) {
                             ForEach(0..<options.count, id: \.self) { index in
@@ -247,7 +269,6 @@ struct Chip: View {
                     )
                     .padding(.trailing, 20)
                     
-                    Spacer()
                 }
             } else {
                 HStack(spacing: 0) {
@@ -276,7 +297,8 @@ struct Chip: View {
                     .frame(width: 30)
                     
                     GeometryReader { geometry in
-                        InfiniteVerticalScrollView(strings: wordlist.words, width: geometry.size.width, bgColor: wordlist.swiftUIColor)
+                        
+                        InfiniteVerticalScrollView(strings: randomWords, width: geometry.size.width, bgColor: wordlist.swiftUIColor)
                             .frame(width: geometry.size.width)
                     }
                     

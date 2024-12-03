@@ -8134,7 +8134,7 @@
     "category": "frequency",
     "color": "#800080",
     "sorted": true,
-    "name": "pf_Renaissance"
+    "name": "Poetry Foundation Renaissance"
   },
   {
     "words": [
@@ -13989,6 +13989,6 @@
     "category": "frequency",
     "color": "#800080",
     "sorted": true,
-    "name": "pf_Modern"
+    "name": "Poetry Foundation Modern"
   }
 ]
