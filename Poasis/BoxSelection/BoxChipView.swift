@@ -89,6 +89,7 @@ struct InfiniteVerticalScrollView: View {
         }
         .frame(width: width)
         .clipped()
+        .allowsHitTesting(false)
     }
 }
 
@@ -162,7 +163,7 @@ extension Color {
 
 struct Chip: View {
     let wordlist: WordList
-    let action: () -> Void
+    let action: (String) -> Void
     @State private var isExpanded = false
     @State private var selectedOption = 0
     @GestureState private var translation: CGFloat = 0
@@ -235,7 +236,9 @@ struct Chip: View {
                         
                         // Main button
                         Button(action: {
-                            action()
+                            print("Calling action with \(options[selectedOption]) on wordlist \(wordlist.name)")
+                            action(options[selectedOption])
+                            isExpanded = false
                         }) {
                             Text(options[selectedOption])
                                 .foregroundColor(.white)
@@ -345,8 +348,8 @@ extension Button {
 #Preview {
     let wordlist = WordList(category: "test category", name: "Test wordlist", color: "blue", words: "oh might those sighs and tears return again into my breast and eyes which i have spent".split(separator: " ").map(String.init), sorted: true)
     
-    Chip(wordlist: wordlist) {
-        print("action")
+    Chip(wordlist: wordlist) { selectedOption in
+        print("action", selectedOption)
         return
     }
 }

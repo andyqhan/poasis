@@ -28,6 +28,35 @@ struct WordList: Codable, Identifiable {
         let blue = Double(hexInt & 0x0000FF) / 255.0
         return Color(red: red, green: green, blue: blue)
     }
+    
+    enum Selectors: String, Codable {
+        case top100 = "Top 100"
+        case rand100 = "Random 100"
+        case all = "All"
+    }
+    
+    func getListFromSelector(selectorString: String) -> [String] {
+        if let selector = Selectors(rawValue: selectorString) {
+            switch selector {
+            case .top100:
+                return Array(words.prefix(100))
+            case .rand100:
+                var rands: [String] = []
+                for _ in 0...99 {
+                    // TODO: needs to be without replacement
+                    rands.append(words.randomElement()!)
+                }
+                return rands
+            case .all:
+                if sorted {
+                    return words
+                }
+                return words.shuffled()
+            }
+        } else {
+            return []
+        }
+    }
 }
 
 struct Category: Codable, Identifiable {
@@ -55,14 +84,16 @@ class DataLoader: ObservableObject {
         // Load both files concurrently
         async let list1 = load(name: "pf_wordlist")
         async let list2 = load(name: "gut_wordlist")
+        async let list3 = load(name: "magnetic_poetry")
         
         // Wait for both loads to complete and handle any errors
         do {
-            let (pfList, gutList) = try await (list1, list2)
+            let (pfList, gutList, mpList) = try await (list1, list2, list3)
             // Update UI on main thread since we're modifying @Published property
             await MainActor.run {
                 wordlists.append(contentsOf: pfList)
                 wordlists.append(contentsOf: gutList)
+                wordlists.append(contentsOf: mpList)
             }
         } catch {
             print("Error loading JSON: \(error)")
@@ -107,11 +138,14 @@ struct BoxSelectionView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 10) {
                         ForEach(dataLoader.wordlists) { wordlist in
-                            Chip(wordlist: wordlist) {
-                                print("action")
-                                let words = deduplicate(array: wordlist.words)
+                            Chip(wordlist: wordlist) { selectedOption in
                                 if let translation = proxy.transform(in: .immersiveSpace)?.translation {
-                                    let newWordReelView = WordReelView(wordStrings: wordlist.sorted ? words : words.shuffled(), title: wordlist.name, color: wordlist.swiftUIColor, position: translation) { newCard in
+                                    let newWordReelView = WordReelView(
+                                        wordStrings: wordlist.getListFromSelector(selectorString: selectedOption),
+                                        title: wordlist.name,
+                                        color: wordlist.swiftUIColor,
+                                        position: translation
+                                    ) { newCard in
                                         appState.rootEntity.addChild(newCard.modelEntity)
                                     }
                                     appState.wordReelViews.append(newWordReelView)

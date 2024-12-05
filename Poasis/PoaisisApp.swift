@@ -22,6 +22,7 @@ struct PoaisisApp: App {
             BoxSelectionView()
                 .environment(appState)
         }
+        .windowStyle(.plain)
         
         ImmersiveSpace(id: "ImmersiveSpace") {
             CompositionView()
